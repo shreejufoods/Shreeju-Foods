@@ -14,7 +14,7 @@
 </head>
 <body class="bg-[#F8F9FA] text-gray-800 font-sans pb-24">
 
-  <!-- Announcement Bar -->
+  <!-- Top Announcement Bar -->
   <div id="flashBar" class="bg-[#1E3A2B] text-[#E8F5E9] text-xs md:text-sm py-2 px-4 text-center font-medium hidden">
     <span id="flashText"></span>
   </div>
@@ -96,9 +96,9 @@
         <div>
           <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Delivery Address</h4>
           <div class="space-y-2">
-            <input type="text" id="custName" placeholder="Full Name *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
+            <input type="text" id="custName" placeholder="Customer Full Name *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
             <input type="tel" id="custPhone" placeholder="10-digit WhatsApp Number *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
-            <textarea id="custAddress" placeholder="House / Flat No, Street, Landmark *" rows="2" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none"></textarea>
+            <textarea id="custAddress" placeholder="House / Flat No, Street, Colony, Landmark *" rows="2" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none"></textarea>
             
             <div class="grid grid-cols-2 gap-2">
               <input type="text" id="custCity" placeholder="City / District *" class="p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
@@ -117,17 +117,17 @@
           </div>
         </div>
 
-        <!-- Static / Helpful UPI QR Display (Optional Scan) -->
+        <!-- UPI QR Display -->
         <div id="upiCard" class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center">
-          <p class="font-bold text-emerald-900 text-xs mb-1">Instant UPI Payment (Optional)</p>
+          <p class="font-bold text-emerald-900 text-xs mb-1">UPI Payment (Optional)</p>
           <img id="upiQrImg" src="" alt="UPI QR" class="w-36 h-36 mx-auto rounded-lg border border-emerald-200 shadow-sm bg-white" />
           <p class="text-[11px] text-gray-600 mt-1.5 font-medium">Google Pay / PhonePe / Paytm / BHIM</p>
-          <p class="text-[10px] text-gray-500 mt-0.5">Aap chahein toh abhi scan kar sakte hain, ya order confirmation ke baad bhi pay kar sakte hain.</p>
+          <p class="text-[10px] text-gray-500 mt-0.5">Aap chahein toh scan karke pay kar sakte hain ya confirmation par discuss kar sakte hain.</p>
         </div>
 
       </div>
 
-      <!-- Fixed Drawer Footer (Always Visible Button) -->
+      <!-- Fixed Drawer Footer -->
       <div class="p-3 border-t bg-white shrink-0 shadow-lg">
         <button onclick="processWhatsAppOrder()" class="w-full bg-[#25D366] hover:bg-[#1EBE5D] text-white py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md transition active:scale-[0.99]">
           <i class="fa-brands fa-whatsapp text-xl"></i> Place Order on WhatsApp
@@ -400,7 +400,6 @@
       document.getElementById('summaryShipping').textContent = shipping === 0 ? 'FREE' : `₹${shipping}`;
       document.getElementById('summaryGrandTotal').textContent = `₹${state.grandTotal}`;
 
-      // Dynamic UPI QR Image URL
       if (state.grandTotal > 0) {
         const upiId = state.settings.UPI_ID || '9690002789@upi';
         const upiUrl = `upi://pay?pa=${upiId}&pn=ShreejuFoods&am=${state.grandTotal}&cu=INR`;
@@ -473,11 +472,11 @@
       const fullMessage = 
         `*NEW ORDER - SHREEJU FOODS*\n\n` +
         `*CUSTOMER DETAILS:*\n` +
-        `👤 Name: ${name}\n` +
-        `📞 Phone: ${phone}\n` +
-        `📍 Address: ${address}\n` +
-        `🏙️ City: ${city}\n` +
-        `📮 Pincode: ${pincode}\n\n` +
+        `Name: ${name}\n` +
+        `Phone: ${phone}\n` +
+        `Address: ${address}\n` +
+        `City: ${city}\n` +
+        `Pincode: ${pincode}\n\n` +
         `*ITEMS ORDERED:*\n` +
         orderSummary +
         `\n*BILL SUMMARY:*\n` +
@@ -485,8 +484,7 @@
         `Weight: ${weight}\n` +
         `Shipping: ${shipping}\n` +
         `*TOTAL PAYABLE:* ${grandTotal}\n\n` +
-        `💳 *Store UPI ID:* ${upi}\n` +
-        `(Payment verified by Store Owner)`;
+        `Payment: Store UPI (${upi}) / Confirmation par baat karein`;
 
       const waURL = `https://wa.me/${waNumber}?text=${encodeURIComponent(fullMessage)}`;
       window.open(waURL, '_blank');
