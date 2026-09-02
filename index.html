@@ -14,7 +14,7 @@
 </head>
 <body class="bg-[#F8F9FA] text-gray-800 font-sans pb-24">
 
-  <!-- Top Running Announcement Bar -->
+  <!-- Top Announcement Bar -->
   <div id="flashBar" class="bg-[#1E3A2B] text-[#E8F5E9] text-xs md:text-sm py-2 px-4 text-center font-medium hidden">
     <span id="flashText"></span>
   </div>
@@ -22,16 +22,16 @@
   <!-- Header -->
   <header class="bg-white border-b sticky top-0 z-40 shadow-sm">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <img id="storeLogo" src="" alt="Logo" class="h-10 w-auto object-contain hidden" />
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🌿</span>
         <div>
           <h1 id="storeName" class="text-xl font-bold text-gray-900 leading-tight">Shreeju Foods</h1>
           <p id="storeTagline" class="text-xs text-gray-500 hidden md:block">100% Natural & Chemical Free</p>
         </div>
       </div>
-      <button onclick="toggleCart()" class="relative bg-[#2D5A27] text-white px-4 py-2 rounded-xl flex items-center gap-2 font-medium hover:bg-[#1E3A2B] transition">
+      <button onclick="toggleCart()" class="relative bg-[#2D5A27] text-white px-4 py-2 rounded-xl flex items-center gap-2 font-medium hover:bg-[#1E3A2B] transition shadow-sm">
         <i class="fa-solid fa-bag-shopping"></i>
-        <span>Cart</span>
+        <span>Basket</span>
         <span id="cartCount" class="bg-amber-400 text-gray-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
       </button>
     </div>
@@ -45,15 +45,8 @@
     </div>
   </header>
 
-  <!-- Banner -->
-  <div id="bannerSection" class="max-w-6xl mx-auto px-4 mt-4 hidden">
-    <div class="rounded-2xl overflow-hidden shadow-sm relative">
-      <img id="bannerImg" src="" alt="Offer" class="w-full h-44 md:h-64 object-cover" />
-    </div>
-  </div>
-
   <!-- Category Scroll -->
-  <div class="max-w-6xl mx-auto px-4 mt-5">
+  <div class="max-w-6xl mx-auto px-4 mt-4">
     <div id="categoriesContainer" class="flex gap-2 overflow-x-auto hide-scrollbar py-1">
       <button onclick="selectCategory('ALL')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-[#2D5A27] text-white whitespace-nowrap shadow-sm">All Items</button>
     </div>
@@ -66,59 +59,76 @@
     </div>
   </main>
 
-  <!-- Customer Photo UGC Gallery -->
+  <!-- Customer Photo Reviews -->
   <section class="max-w-6xl mx-auto px-4 mt-12 mb-8">
     <div class="flex items-center justify-between mb-4">
       <div>
         <h2 class="text-lg font-bold text-gray-900">Real Customer Snaps & Reviews</h2>
         <p class="text-xs text-gray-500">Shared by verified family members</p>
       </div>
-      <a id="feedbackBtn" href="https://wa.me/919690002789?text=Namaste!%20Mai%20apna%20feedback%20aur%20dish%20photo%20share%20karna%20chahta%20hu" target="_blank" class="text-xs font-semibold text-[#2D5A27] hover:underline flex items-center gap-1">
-        <i class="fa-solid fa-camera"></i> Share Yours
-      </a>
     </div>
     <div id="reviewsGrid" class="flex gap-4 overflow-x-auto hide-scrollbar pb-2"></div>
   </section>
 
-  <!-- Cart Modal / Drawer -->
+  <!-- Full Height Smooth Scroll Cart Drawer -->
   <div id="cartModal" class="fixed inset-0 bg-black/50 z-50 hidden flex justify-end">
     <div class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl">
-      <div class="p-4 border-b flex items-center justify-between bg-gray-50">
-        <h3 class="font-bold text-gray-800 text-base">Your Basket</h3>
-        <button onclick="toggleCart()" class="text-gray-500 hover:text-gray-800 text-lg"><i class="fa-solid fa-xmark"></i></button>
+      
+      <!-- Drawer Header -->
+      <div class="p-4 border-b flex items-center justify-between bg-gray-50 shrink-0">
+        <div>
+          <h3 class="font-bold text-gray-800 text-base">Your Basket</h3>
+          <p class="text-[11px] text-gray-500">Review items and delivery details</p>
+        </div>
+        <button onclick="toggleCart()" class="text-gray-500 hover:text-gray-800 text-2xl p-1 leading-none">&times;</button>
       </div>
 
-      <div id="cartItemsList" class="flex-1 overflow-y-auto p-4 divide-y space-y-3"></div>
-
-      <!-- Checkout Details Form -->
-      <div class="p-4 border-t bg-gray-50 space-y-3 text-xs">
-        <div class="space-y-2">
-          <input type="text" id="custName" placeholder="Full Name *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
-          <input type="tel" id="custPhone" placeholder="10-digit WhatsApp Number *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
-          <textarea id="custAddress" placeholder="House No, Road / Landmark, City *" rows="2" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none"></textarea>
-          <input type="text" id="custPincode" placeholder="6-digit Pincode *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
+      <!-- Drawer Scrollable Body -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-4">
+        
+        <!-- Cart Items List -->
+        <div>
+          <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Order Items</h4>
+          <div id="cartItemsList" class="divide-y border rounded-xl p-2 bg-gray-50"></div>
         </div>
 
-        <div class="space-y-1.5 pt-2 text-gray-600">
-          <div class="flex justify-between"><span>Items Subtotal</span><span id="summarySubtotal" class="font-semibold text-gray-800">₹0</span></div>
-          <div class="flex justify-between"><span>Total Weight</span><span id="summaryWeight">0 g</span></div>
-          <div class="flex justify-between"><span>Delivery Fee</span><span id="summaryShipping" class="font-semibold text-gray-800">₹0</span></div>
-          <div class="flex justify-between text-sm font-bold text-gray-900 border-t pt-1.5">
-            <span>Payable Amount</span><span id="summaryGrandTotal" class="text-[#2D5A27]">₹0</span>
+        <!-- Customer Details -->
+        <div>
+          <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Delivery Address</h4>
+          <div class="space-y-2">
+            <input type="text" id="custName" placeholder="Customer Full Name *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
+            <input type="tel" id="custPhone" placeholder="10-digit WhatsApp Number *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
+            <textarea id="custAddress" placeholder="Full House No, Street, Landmark, City *" rows="2" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none"></textarea>
+            <input type="text" id="custPincode" placeholder="6-digit Pincode *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
           </div>
         </div>
 
-        <!-- Dynamic UPI Payment Card -->
-        <div id="upiCard" class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-center hidden">
-          <p class="font-bold text-emerald-900 mb-1">Instant Scan & Pay via UPI</p>
-          <img id="upiQrImg" src="" alt="UPI QR" class="w-32 h-32 mx-auto rounded-lg border border-emerald-200 shadow-sm" />
-          <p class="text-[10px] text-gray-500 mt-1">Google Pay / PhonePe / Paytm / BHIM</p>
+        <!-- Price Summary -->
+        <div class="border rounded-xl p-3 bg-gray-50 space-y-2 text-xs text-gray-600">
+          <div class="flex justify-between"><span>Items Total</span><span id="summarySubtotal" class="font-semibold text-gray-800">₹0</span></div>
+          <div class="flex justify-between"><span>Package Weight</span><span id="summaryWeight">0 g</span></div>
+          <div class="flex justify-between"><span>Shipping</span><span id="summaryShipping" class="font-semibold text-gray-800">₹0</span></div>
+          <div class="flex justify-between text-sm font-bold text-gray-900 border-t pt-2">
+            <span>Total Payable Amount</span><span id="summaryGrandTotal" class="text-[#2D5A27]">₹0</span>
+          </div>
         </div>
 
-        <button onclick="processWhatsAppOrder()" class="w-full bg-[#25D366] hover:bg-[#1EBE5D] text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md transition">
-          <i class="fa-brands fa-whatsapp text-lg"></i> Send Order on WhatsApp
+        <!-- Dynamic QR Code -->
+        <div id="upiCard" class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center">
+          <p class="font-bold text-emerald-900 text-xs mb-1">Instant Scan & Pay via UPI</p>
+          <img id="upiQrImg" src="" alt="UPI QR" class="w-36 h-36 mx-auto rounded-lg border border-emerald-200 shadow-sm bg-white" />
+          <p class="text-[11px] text-gray-500 mt-1">Scan using Google Pay / PhonePe / Paytm</p>
+        </div>
+
+      </div>
+
+      <!-- Fixed Drawer Footer (Always Visible Button) -->
+      <div class="p-3 border-t bg-white shrink-0 shadow-lg">
+        <button onclick="processWhatsAppOrder()" class="w-full bg-[#25D366] hover:bg-[#1EBE5D] text-white py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md transition active:scale-[0.99]">
+          <i class="fa-brands fa-whatsapp text-xl"></i> Place Order on WhatsApp
         </button>
       </div>
+
     </div>
   </div>
 
@@ -178,18 +188,9 @@
       const s = state.settings;
       if (s.StoreName) document.getElementById('storeName').textContent = s.StoreName;
       if (s.StoreTagline) document.getElementById('storeTagline').textContent = s.StoreTagline;
-      if (s.StoreLogo && s.StoreLogo.startsWith('http')) {
-        const logo = document.getElementById('storeLogo');
-        logo.src = s.StoreLogo;
-        logo.classList.remove('hidden');
-      }
       if (s.ShowFlashBar === 'YES' && s.FlashOfferText) {
         document.getElementById('flashText').textContent = s.FlashOfferText;
         document.getElementById('flashBar').classList.remove('hidden');
-      }
-      if (s.ShowBanner === 'YES' && s.BannerImage) {
-        document.getElementById('bannerImg').src = s.BannerImage;
-        document.getElementById('bannerSection').classList.remove('hidden');
       }
     }
 
@@ -218,11 +219,11 @@
     function parseVariants(raw) {
       if(!raw) return [];
       return raw.split(',').map(item => {
-        const [size, price, mrp] = item.trim().split(':');
+        const parts = item.trim().split(':');
         return {
-          size: size ? size.trim() : '',
-          price: parseInt(price) || 0,
-          mrp: parseInt(mrp) || parseInt(price) || 0
+          size: parts[0] ? parts[0].trim() : 'Standard',
+          price: parseInt(parts[1]) || 0,
+          mrp: parseInt(parts[2]) || parseInt(parts[1]) || 0
         };
       });
     }
@@ -317,6 +318,7 @@
         };
       }
       updateCartDisplay();
+      document.getElementById('cartModal').classList.remove('hidden');
     }
 
     function updateCartDisplay() {
@@ -331,9 +333,8 @@
       const keys = Object.keys(state.cart);
 
       if(!keys.length) {
-        list.innerHTML = `<p class="text-center text-gray-400 py-10 text-xs">Your basket is empty.</p>`;
+        list.innerHTML = `<p class="text-center text-gray-400 py-6 text-xs">Aapka basket abhi khali hai.</p>`;
         calculateCheckout(0, 0);
-        document.getElementById('upiCard').classList.add('hidden');
         return;
       }
 
@@ -346,22 +347,23 @@
         subtotal += itemTotal;
 
         let grams = 0;
-        if(item.size.toLowerCase().includes('kg')) grams = parseFloat(item.size) * 1000;
-        else grams = parseFloat(item.size) || 100;
+        const sz = item.size.toLowerCase();
+        if(sz.includes('kg')) grams = parseFloat(sz) * 1000;
+        else grams = parseFloat(sz) || 100;
         totalGrams += grams * item.qty;
 
         return `
-          <div class="py-2 flex items-center justify-between gap-2 text-xs">
+          <div class="py-2.5 flex items-center justify-between gap-2 text-xs">
             <div class="flex-1">
               <h5 class="font-bold text-gray-800">${item.name}</h5>
-              <span class="text-gray-500 text-[11px]">${item.size} • ₹${item.price} each</span>
+              <span class="text-gray-500 text-[11px]">${item.size} • ₹${item.price}</span>
             </div>
-            <div class="flex items-center gap-2 border rounded-md px-1.5 py-0.5 bg-gray-50">
-              <button onclick="changeQty('${k}', -1)" class="font-bold text-gray-600 px-1">-</button>
-              <span class="font-semibold">${item.qty}</span>
-              <button onclick="changeQty('${k}', 1)" class="font-bold text-gray-600 px-1">+</button>
+            <div class="flex items-center gap-2 border rounded-md px-2 py-0.5 bg-white shadow-sm">
+              <button onclick="changeQty('${k}', -1)" class="font-bold text-gray-700 px-1 text-sm">-</button>
+              <span class="font-bold text-gray-900">${item.qty}</span>
+              <button onclick="changeQty('${k}', 1)" class="font-bold text-gray-700 px-1 text-sm">+</button>
             </div>
-            <span class="font-bold text-gray-900 w-12 text-right">₹${itemTotal}</span>
+            <span class="font-bold text-gray-900 text-right min-w-[50px]">₹${itemTotal}</span>
           </div>
         `;
       }).join('');
@@ -393,12 +395,11 @@
       document.getElementById('summaryShipping').textContent = shipping === 0 ? 'FREE' : `₹${shipping}`;
       document.getElementById('summaryGrandTotal').textContent = `₹${state.grandTotal}`;
 
-      // Dynamic UPI QR code generator
+      // Live UPI QR
       if (state.grandTotal > 0) {
         const upiId = state.settings.UPI_ID || '9690002789@upi';
         const upiUrl = `upi://pay?pa=${upiId}&pn=ShreejuFoods&am=${state.grandTotal}&cu=INR`;
         document.getElementById('upiQrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiUrl)}`;
-        document.getElementById('upiCard').classList.remove('hidden');
       }
     }
 
@@ -427,31 +428,34 @@
     }
 
     function shareOnWhatsApp(name, price) {
-      const msg = `Dekhiye yeh pure natural & chemical-free ${name} sirf ₹${price} me: ${window.location.href}`;
+      const msg = `Check out this 100% natural & chemical-free ${name} at ₹${price}: ${window.location.href}`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
     function processWhatsAppOrder() {
       const name = document.getElementById('custName').value.trim();
-      const phone = document.getElementById('custPhone').value.trim();
+      let phone = document.getElementById('custPhone').value.trim();
       const address = document.getElementById('custAddress').value.trim();
       const pincode = document.getElementById('custPincode').value.trim();
 
       if (!name || !phone || !address || !pincode) {
-        alert("Kripya apna Naam, Phone, Address aur Pincode zaroor bharein!");
+        alert("Kripya apna Naam, Phone Number, Poora Address aur Pincode zaroor bharein!");
         return;
       }
 
       const keys = Object.keys(state.cart);
       if(!keys.length) {
-        alert("Aapka basket khali hai.");
+        alert("Aapka basket khali hai!");
         return;
       }
 
-      let orderLines = "";
+      // Sanitize phone (leading 0 hatao)
+      phone = phone.replace(/^0+/, '');
+
+      let orderSummary = "";
       keys.forEach((k, idx) => {
-        const item = state.cart[k];
-        orderLines += `${idx + 1}. ${item.name} (${item.size}) x ${item.qty} = Rs.${item.price * item.qty}\n`;
+        const it = state.cart[k];
+        orderSummary += `${idx + 1}. ${it.name} [${it.size}] x ${it.qty} = Rs. ${it.price * it.qty}\n`;
       });
 
       const subtotal = document.getElementById('summarySubtotal').textContent;
@@ -461,27 +465,24 @@
       const upi = state.settings.UPI_ID || '9690002789@upi';
       const waNumber = state.settings.WhatsAppNumber || '919690002789';
 
-      // Clean, uncorrupted plain message format
       const fullMessage = 
-        `*NAMASTE SHREEJU FOODS!*\n` +
-        `Mai ek naya order place karna chahta hu:\n\n` +
-        `*ORDER DETAILS:*\n` +
-        orderLines +
-        `\n------------------------\n` +
-        `*Items Subtotal:* ${subtotal}\n` +
-        `*Total Weight:* ${weight}\n` +
-        `*Delivery Fee:* ${shipping}\n` +
-        `*FINAL PAYABLE AMOUNT:* ${grandTotal}\n` +
-        `------------------------\n\n` +
-        `*CUSTOMER & DELIVERY DETAILS:*\n` +
-        `👤 *Naam:* ${name}\n` +
-        `📞 *Phone:* ${phone}\n` +
-        `📍 *Address:* ${address}\n` +
-        `📮 *Pincode:* ${pincode}\n\n` +
-        `💳 *UPI Payment ID:* ${upi}\n` +
-        `(Maine payment kar di hai / mai payment kar raha hu)`;
+        `*NEW ORDER - SHREEJU FOODS*\n\n` +
+        `*CUSTOMER DETAILS:*\n` +
+        `👤 Name: ${name}\n` +
+        `📞 Phone: ${phone}\n` +
+        `📍 Address: ${address}\n` +
+        `📮 Pincode: ${pincode}\n\n` +
+        `*ITEMS ORDERED:*\n` +
+        orderSummary +
+        `\n*BILL SUMMARY:*\n` +
+        `Subtotal: ${subtotal}\n` +
+        `Weight: ${weight}\n` +
+        `Shipping: ${shipping}\n` +
+        `*TOTAL PAYABLE:* ${grandTotal}\n\n` +
+        `💳 *Paid via UPI:* ${upi}\n` +
+        `(Payment receipt attached below)`;
 
-      const waURL = `https://api.whatsapp.com/send?phone=${waNumber}&text=${encodeURIComponent(fullMessage)}`;
+      const waURL = `https://wa.me/${waNumber}?text=${encodeURIComponent(fullMessage)}`;
       window.open(waURL, '_blank');
     }
 
