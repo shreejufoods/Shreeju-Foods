@@ -14,7 +14,7 @@
 </head>
 <body class="bg-[#F8F9FA] text-gray-800 font-sans pb-24">
 
-  <!-- Top Announcement Bar -->
+  <!-- Announcement Bar -->
   <div id="flashBar" class="bg-[#1E3A2B] text-[#E8F5E9] text-xs md:text-sm py-2 px-4 text-center font-medium hidden">
     <span id="flashText"></span>
   </div>
@@ -45,21 +45,21 @@
     </div>
   </header>
 
-  <!-- Category Scroll -->
+  <!-- Category Filter -->
   <div class="max-w-6xl mx-auto px-4 mt-4">
     <div id="categoriesContainer" class="flex gap-2 overflow-x-auto hide-scrollbar py-1">
       <button onclick="selectCategory('ALL')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-[#2D5A27] text-white whitespace-nowrap shadow-sm">All Items</button>
     </div>
   </div>
 
-  <!-- Product Grid -->
+  <!-- Product Catalog -->
   <main class="max-w-6xl mx-auto px-4 mt-6">
     <div id="productsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       <p class="col-span-full text-center text-gray-500 py-10">Loading products...</p>
     </div>
   </main>
 
-  <!-- Customer Photo Reviews -->
+  <!-- Customer UGC Snaps -->
   <section class="max-w-6xl mx-auto px-4 mt-12 mb-8">
     <div class="flex items-center justify-between mb-4">
       <div>
@@ -92,14 +92,18 @@
           <div id="cartItemsList" class="divide-y border rounded-xl p-2 bg-gray-50"></div>
         </div>
 
-        <!-- Customer Details -->
+        <!-- Customer & Delivery Details -->
         <div>
           <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Delivery Address</h4>
           <div class="space-y-2">
-            <input type="text" id="custName" placeholder="Customer Full Name *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
+            <input type="text" id="custName" placeholder="Full Name *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
             <input type="tel" id="custPhone" placeholder="10-digit WhatsApp Number *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
-            <textarea id="custAddress" placeholder="Full House No, Street, Landmark, City *" rows="2" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none"></textarea>
-            <input type="text" id="custPincode" placeholder="6-digit Pincode *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
+            <textarea id="custAddress" placeholder="House / Flat No, Street, Landmark *" rows="2" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none"></textarea>
+            
+            <div class="grid grid-cols-2 gap-2">
+              <input type="text" id="custCity" placeholder="City / District *" class="p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
+              <input type="text" id="custPincode" placeholder="6-digit Pincode *" class="p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
+            </div>
           </div>
         </div>
 
@@ -113,11 +117,12 @@
           </div>
         </div>
 
-        <!-- Dynamic QR Code -->
+        <!-- Static / Helpful UPI QR Display (Optional Scan) -->
         <div id="upiCard" class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center">
-          <p class="font-bold text-emerald-900 text-xs mb-1">Instant Scan & Pay via UPI</p>
+          <p class="font-bold text-emerald-900 text-xs mb-1">Instant UPI Payment (Optional)</p>
           <img id="upiQrImg" src="" alt="UPI QR" class="w-36 h-36 mx-auto rounded-lg border border-emerald-200 shadow-sm bg-white" />
-          <p class="text-[11px] text-gray-500 mt-1">Scan using Google Pay / PhonePe / Paytm</p>
+          <p class="text-[11px] text-gray-600 mt-1.5 font-medium">Google Pay / PhonePe / Paytm / BHIM</p>
+          <p class="text-[10px] text-gray-500 mt-0.5">Aap chahein toh abhi scan kar sakte hain, ya order confirmation ke baad bhi pay kar sakte hain.</p>
         </div>
 
       </div>
@@ -395,7 +400,7 @@
       document.getElementById('summaryShipping').textContent = shipping === 0 ? 'FREE' : `₹${shipping}`;
       document.getElementById('summaryGrandTotal').textContent = `₹${state.grandTotal}`;
 
-      // Live UPI QR
+      // Dynamic UPI QR Image URL
       if (state.grandTotal > 0) {
         const upiId = state.settings.UPI_ID || '9690002789@upi';
         const upiUrl = `upi://pay?pa=${upiId}&pn=ShreejuFoods&am=${state.grandTotal}&cu=INR`;
@@ -436,10 +441,11 @@
       const name = document.getElementById('custName').value.trim();
       let phone = document.getElementById('custPhone').value.trim();
       const address = document.getElementById('custAddress').value.trim();
+      const city = document.getElementById('custCity').value.trim();
       const pincode = document.getElementById('custPincode').value.trim();
 
-      if (!name || !phone || !address || !pincode) {
-        alert("Kripya apna Naam, Phone Number, Poora Address aur Pincode zaroor bharein!");
+      if (!name || !phone || !address || !city || !pincode) {
+        alert("Kripya apna Naam, Phone Number, Poora Address, City aur Pincode zaroor bharein!");
         return;
       }
 
@@ -449,7 +455,6 @@
         return;
       }
 
-      // Sanitize phone (leading 0 hatao)
       phone = phone.replace(/^0+/, '');
 
       let orderSummary = "";
@@ -471,6 +476,7 @@
         `👤 Name: ${name}\n` +
         `📞 Phone: ${phone}\n` +
         `📍 Address: ${address}\n` +
+        `🏙️ City: ${city}\n` +
         `📮 Pincode: ${pincode}\n\n` +
         `*ITEMS ORDERED:*\n` +
         orderSummary +
@@ -479,8 +485,8 @@
         `Weight: ${weight}\n` +
         `Shipping: ${shipping}\n` +
         `*TOTAL PAYABLE:* ${grandTotal}\n\n` +
-        `💳 *Paid via UPI:* ${upi}\n` +
-        `(Payment receipt attached below)`;
+        `💳 *Store UPI ID:* ${upi}\n` +
+        `(Payment verified by Store Owner)`;
 
       const waURL = `https://wa.me/${waNumber}?text=${encodeURIComponent(fullMessage)}`;
       window.open(waURL, '_blank');
