@@ -309,7 +309,7 @@
         return `
           <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition">
             <div class="relative bg-gray-50">
-              <img src="${validImg}" alt="${prod.ProductName}" class="w-full h-36 object-cover" />
+              <img src="${validImg}" alt="${prod.ProductName}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400';" class="w-full h-36 object-cover" />
               ${prod.Badge ? `<span class="absolute top-2 left-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm">${prod.Badge}</span>` : ''}
               
               <button onclick="shareProduct('${prod.ProductName}', '${first.price}')" title="Share with Friends" class="absolute top-2 right-2 bg-white/95 text-gray-700 hover:text-[#25D366] rounded-full h-7 w-7 flex items-center justify-center text-xs shadow-sm transition">
