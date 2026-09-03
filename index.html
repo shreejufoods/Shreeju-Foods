@@ -65,7 +65,7 @@
     </div>
   </div>
 
-  <!-- Trust Badges (Single Clean Row) -->
+  <!-- Trust Badges (FSSAI, GST, Natural) -->
   <div class="max-w-6xl mx-auto px-4 mt-4">
     <div class="bg-white border border-gray-200 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs text-gray-600 shadow-sm">
       <div class="flex items-center gap-2">
@@ -76,14 +76,16 @@
         </div>
       </div>
 
-     <div class="flex items-center gap-2">
-        <img src="https://images.seeklogo.com/logo-png/43/1/fssai-logo-png_seeklogo-436443.png" alt="FSSAI" class="h-7 w-auto object-contain" onerror="this.src='https://cdn.worldvectorlogo.com/logos/fssai.svg'" />
+      <!-- Clean Official FSSAI Badge -->
+      <div class="flex items-center gap-2">
+        <img src="https://images.seeklogo.com/logo-png/43/1/fssai-logo-png_seeklogo-436443.png" alt="FSSAI" class="h-6 w-auto object-contain" onerror="this.src='https://cdn.worldvectorlogo.com/logos/fssai.svg'" />
         <div>
           <span class="font-bold text-gray-800 block leading-tight text-xs">FSSAI Certified</span>
           <span id="badgeFssaiNo" class="text-[10px] text-gray-500">Lic. No: Available on Invoice</span>
         </div>
       </div>
 
+      <!-- GST Badge -->
       <div class="flex items-center gap-2">
         <span class="font-black text-emerald-900 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 tracking-wider text-[11px]">GST</span>
         <div>
@@ -386,31 +388,32 @@
     }
 
     async function init() {
-      localStorage.clear();
+      // Parallel fast fetching with version-based caching
       await Promise.all([
-        fetchFastCSV(SHEET_URLS.settings).then(rows => {
+        fetchFastCSV(SHEET_URLS.settings, 300).then(rows => {
           rows.forEach(r => { if(r.SettingKey) state.settings[r.SettingKey.trim()] = (r.Value || "").trim(); });
           applySettings();
         }),
-        fetchFastCSV(SHEET_URLS.categories).then(rows => {
+        fetchFastCSV(SHEET_URLS.categories, 300).then(rows => {
           state.categories = rows.filter(r => (r.Active || "").toUpperCase() === "YES");
           renderCategories();
         }),
-        fetchFastCSV(SHEET_URLS.products).then(rows => {
+        fetchFastCSV(SHEET_URLS.products, 60).then(rows => {
           state.products = rows.filter(r => (r.InStock || "").toUpperCase() === "YES");
           renderCatalog();
         }),
-        fetchFastCSV(SHEET_URLS.reviews).then(rows => {
+        fetchFastCSV(SHEET_URLS.reviews, 300).then(rows => {
           state.reviews = rows.filter(r => (r.Approved || "").toUpperCase() === "YES");
           renderReviews();
         })
       ]);
     }
 
-    function fetchFastCSV(url) {
+    function fetchFastCSV(url, cacheSeconds = 60) {
       return new Promise((resolve) => {
-        const freshUrl = url + (url.includes('?') ? '&' : '?') + '_t=' + Date.now();
-        Papa.parse(freshUrl, {
+        const cacheKey = Math.floor(Date.now() / (cacheSeconds * 1000));
+        const fastUrl = url + (url.includes('?') ? '&' : '?') + '_v=' + cacheKey;
+        Papa.parse(fastUrl, {
           download: true,
           header: true,
           skipEmptyLines: true,
@@ -502,7 +505,7 @@
       return `
         <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition">
           <div class="relative bg-white flex items-center justify-center p-2 border-b cursor-pointer" onclick="openProductDetail('${prod.ProductID}')">
-            <img src="${finalImg}" alt="${prod.ProductName}" onerror="this.src='https://shreejufoods.github.io/Shreeju-Foods/logo.png'" class="w-full h-36 object-contain" />
+            <img src="${finalImg}" alt="${prod.ProductName}" loading="lazy" decoding="async" onerror="this.src='https://shreejufoods.github.io/Shreeju-Foods/logo.png'" class="w-full h-36 object-contain" />
             ${prod.Badge ? `<span class="absolute top-2 left-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm">${prod.Badge}</span>` : ''}
             
             <button onclick="event.stopPropagation(); shareProduct('${prod.ProductName}', '${first.price}')" title="Share with Friends" class="absolute top-2 right-2 bg-white/95 text-gray-700 hover:text-[#25D366] rounded-full h-7 w-7 flex items-center justify-center text-xs shadow-sm transition">
