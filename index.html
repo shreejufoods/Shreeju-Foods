@@ -199,46 +199,35 @@
     };
 
     // Smart Image URL Converter (Direct Image Handler)
+
     function fixImageUrl(url) {
-      if (!url || !url.startsWith('http')) return 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400';
-      // Agar Google Drive ka link hai, toh direct thumbnail me convert karein
-      if (url.includes('drive.google.com')) {
-        const idMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+      if (!url || typeof url !== 'string') return 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400';
+      const cleanUrl = url.trim();
+      if (!cleanUrl.startsWith('http')) return 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400';
+      
+      // Google Drive Direct Thumbnail Conversion
+      if (cleanUrl.includes('drive.google.com')) {
+        const idMatch = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || cleanUrl.match(/id=([a-zA-Z0-9_-]+)/);
         if (idMatch && idMatch[1]) {
           return `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w600`;
         }
       }
-      return url;
+      return cleanUrl;
     }
 
     async function init() {
-      // 1. Instant Cache Render
-      const cp = localStorage.getItem('sf_cached_products');
-      const cc = localStorage.getItem('sf_cached_categories');
-      const cs = localStorage.getItem('sf_cached_settings');
-      if (cp && cc) {
-        state.products = JSON.parse(cp);
-        state.categories = JSON.parse(cc);
-        if (cs) { state.settings = JSON.parse(cs); applySettings(); }
-        renderCategories();
-        renderProducts();
-      }
-
-      // 2. Parallel Background Sync
+      // Direct Fresh Data Fetch (Purana cache block hata diya)
       Promise.all([
         fetchFastCSV(SHEET_URLS.settings).then(rows => {
           rows.forEach(r => { if(r.SettingKey) state.settings[r.SettingKey.trim()] = (r.Value || "").trim(); });
-          localStorage.setItem('sf_cached_settings', JSON.stringify(state.settings));
           applySettings();
         }),
         fetchFastCSV(SHEET_URLS.categories).then(rows => {
           state.categories = rows.filter(r => (r.Active || "").toUpperCase() === "YES");
-          localStorage.setItem('sf_cached_categories', JSON.stringify(state.categories));
           renderCategories();
         }),
         fetchFastCSV(SHEET_URLS.products).then(rows => {
           state.products = rows.filter(r => (r.InStock || "").toUpperCase() === "YES");
-          localStorage.setItem('sf_cached_products', JSON.stringify(state.products));
           renderProducts();
         }),
         fetchFastCSV(SHEET_URLS.reviews).then(rows => {
@@ -247,7 +236,7 @@
         })
       ]);
     }
-
+    
 function fetchFastCSV(url) {
       return new Promise((resolve) => {
         // Fresh data lane ke liye timestamp
