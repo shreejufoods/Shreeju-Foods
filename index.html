@@ -185,10 +185,9 @@
     };
 
     // Auto-detects and fixes any image link from Sheet
-    function resolveProductImage(prod) {
+function resolveProductImage(prod) {
       if (!prod) return "https://shreejufoods.github.io/Shreeju-Foods/logo.png";
       
-      // Auto-detect any column that might have the image
       let raw = "";
       for (const key of Object.keys(prod)) {
         const k = key.trim().toLowerCase();
@@ -202,7 +201,12 @@
         return "https://shreejufoods.github.io/Shreeju-Foods/logo.png";
       }
 
-      let clean = raw.trim().replace(/^["']|["']$/g, ''); // quotes hataye
+      // Markdown brackets [url](url) me se asli link nikalne ka logic
+      let clean = raw.trim();
+      const match = clean.match(/https?:\/\/[^\s)\]]+/);
+      if (match) {
+        clean = match[0];
+      }
 
       if (clean.includes('drive.google.com')) {
         const idMatch = clean.match(/\/d\/([a-zA-Z0-9_-]+)/) || clean.match(/id=([a-zA-Z0-9_-]+)/);
@@ -211,13 +215,9 @@
         }
       }
 
-      if (clean.startsWith('http')) {
-        return clean;
-      }
-
-      return "https://shreejufoods.github.io/Shreeju-Foods/logo.png";
+      return clean.startsWith('http') ? clean : "https://shreejufoods.github.io/Shreeju-Foods/logo.png";
     }
-
+    
     async function init() {
       // Purana cache clear karein taaki hamesha bilkul fresh photo load ho
       localStorage.clear();
