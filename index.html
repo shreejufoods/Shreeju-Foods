@@ -206,39 +206,61 @@
       grandTotal: 0
     };
 
+    // High-Speed Instant Cache System (400+ Products Ready)
     async function init() {
-      await Promise.all([
-        fetchCSV(SHEET_URLS.settings, (rows) => {
+      // 1. Agar pehle se saved data hai, toh 0.1 second me turant screen par dikhao
+      const cachedProducts = localStorage.getItem('sf_cached_products');
+      const cachedCategories = localStorage.getItem('sf_cached_categories');
+      const cachedSettings = localStorage.getItem('sf_cached_settings');
+
+      if (cachedProducts && cachedCategories) {
+        state.products = JSON.parse(cachedProducts);
+        state.categories = JSON.parse(cachedCategories);
+        if (cachedSettings) {
+          state.settings = JSON.parse(cachedSettings);
+          applySettings();
+        }
+        renderCategories();
+        renderProducts();
+      }
+
+      // 2. Background me silently fresh data laao bina screen freeze kiye
+      Promise.all([
+        fetchFastCSV(SHEET_URLS.settings).then(rows => {
           rows.forEach(r => { if(r.SettingKey) state.settings[r.SettingKey.trim()] = (r.Value || "").trim(); });
+          localStorage.setItem('sf_cached_settings', JSON.stringify(state.settings));
           applySettings();
         }),
-        fetchCSV(SHEET_URLS.categories, (rows) => {
+        fetchFastCSV(SHEET_URLS.categories).then(rows => {
           state.categories = rows.filter(r => (r.Active || "").toUpperCase() === "YES");
+          localStorage.setItem('sf_cached_categories', JSON.stringify(state.categories));
           renderCategories();
         }),
-        fetchCSV(SHEET_URLS.products, (rows) => {
+        fetchFastCSV(SHEET_URLS.products).then(rows => {
           state.products = rows.filter(r => (r.InStock || "").toUpperCase() === "YES");
+          localStorage.setItem('sf_cached_products', JSON.stringify(state.products));
           renderProducts();
         }),
-        fetchCSV(SHEET_URLS.reviews, (rows) => {
+        fetchFastCSV(SHEET_URLS.reviews).then(rows => {
           state.reviews = rows.filter(r => (r.Approved || "").toUpperCase() === "YES");
           renderReviews();
         })
       ]);
     }
-    
-    function fetchCSV(url, callback) {
+
+    function fetchFastCSV(url) {
       return new Promise((resolve) => {
         Papa.parse(url, {
           download: true,
           header: true,
           skipEmptyLines: true,
-          complete: (results) => { callback(results.data); resolve(); },
-          error: () => resolve()
+          worker: true, // Multi-threading worker for ultra speed
+          complete: (results) => resolve(results.data || []),
+          error: () => resolve([])
         });
       });
     }
-
+    
     function applySettings() {
       const s = state.settings;
       if (s.StoreName) document.getElementById('storeName').textContent = s.StoreName;
