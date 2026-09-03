@@ -65,7 +65,7 @@
     </div>
   </div>
 
-  <!-- Trust Badges (Instant SVG Logo) -->
+  <!-- Trust Badges -->
   <div class="max-w-6xl mx-auto px-4 mt-4">
     <div class="bg-white border border-gray-200 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs text-gray-600 shadow-sm">
       <div class="flex items-center gap-2">
@@ -76,7 +76,6 @@
         </div>
       </div>
 
-      <!-- FSSAI Instant Graphic SVG -->
       <div class="flex items-center gap-2.5">
         <div class="bg-white border border-gray-200 px-2 py-0.5 rounded shadow-sm flex items-center">
           <span class="font-black italic text-base tracking-tighter text-[#E45826] leading-none">fss</span><span class="font-black italic text-base tracking-tighter text-[#0F4C81] leading-none">ai</span>
@@ -87,7 +86,6 @@
         </div>
       </div>
 
-      <!-- GST Badge -->
       <div class="flex items-center gap-2">
         <span class="font-black text-emerald-900 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 tracking-wider text-[11px]">GST</span>
         <div>
@@ -311,22 +309,42 @@
         <button onclick="toggleCart()" class="text-gray-500 hover:text-gray-800 text-2xl leading-none">&times;</button>
       </div>
       <div class="flex-1 overflow-y-auto p-4 space-y-4">
+        
+        <!-- Past Order Section (Repeat Order) -->
+        <div id="pastOrderSection" class="hidden border border-emerald-200 bg-emerald-50/70 rounded-xl p-3">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-[11px] font-bold text-[#1E3A2B] flex items-center gap-1">
+              <i class="fa-solid fa-clock-rotate-left"></i> Previous Order
+            </span>
+            <span id="pastOrderDate" class="text-[10px] text-gray-500"></span>
+          </div>
+          <p id="pastOrderSummary" class="text-[11px] text-gray-700 mb-2 line-clamp-2"></p>
+          <button onclick="reorderPastItems()" class="w-full bg-[#1E3A2B] hover:bg-[#2D5A27] text-white text-xs font-semibold py-1.5 rounded-lg transition shadow-sm flex items-center justify-center gap-1">
+            <i class="fa-solid fa-rotate-right text-[10px]"></i> Re-order in 1 Click
+          </button>
+        </div>
+
         <div>
           <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Order Items</h4>
           <div id="cartItemsList" class="divide-y border rounded-xl p-2 bg-gray-50"></div>
         </div>
+
         <div>
-          <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Delivery Address</h4>
+          <div class="flex items-center justify-between mb-2">
+            <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Delivery Address</h4>
+            <span class="text-[10px] text-emerald-700 font-medium bg-emerald-50 px-2 py-0.5 rounded">Auto-Saved</span>
+          </div>
           <div class="space-y-2">
-            <input type="text" id="custName" placeholder="Full Name *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none" />
-            <input type="tel" id="custPhone" placeholder="WhatsApp Number *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none" />
-            <textarea id="custAddress" placeholder="House / Street / Colony *" rows="2" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none"></textarea>
+            <input type="text" id="custName" onchange="saveCustomerProfile()" placeholder="Full Name *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none focus:border-green-600" />
+            <input type="tel" id="custPhone" onchange="saveCustomerProfile()" placeholder="WhatsApp Number *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none focus:border-green-600" />
+            <textarea id="custAddress" onchange="saveCustomerProfile()" placeholder="House / Street / Colony *" rows="2" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none focus:border-green-600"></textarea>
             <div class="grid grid-cols-2 gap-2">
-              <input type="text" id="custCity" placeholder="City *" class="p-2.5 rounded-lg border border-gray-300 text-xs outline-none" />
-              <input type="text" id="custPincode" placeholder="Pincode *" class="p-2.5 rounded-lg border border-gray-300 text-xs outline-none" />
+              <input type="text" id="custCity" onchange="saveCustomerProfile()" placeholder="City *" class="p-2.5 rounded-lg border border-gray-300 text-xs outline-none focus:border-green-600" />
+              <input type="text" id="custPincode" onchange="saveCustomerProfile()" placeholder="Pincode *" class="p-2.5 rounded-lg border border-gray-300 text-xs outline-none focus:border-green-600" />
             </div>
           </div>
         </div>
+
         <div class="border rounded-xl p-3 bg-gray-50 space-y-2 text-xs text-gray-600">
           <div class="flex justify-between"><span>Items Total</span><span id="summarySubtotal" class="font-semibold text-gray-800">₹0</span></div>
           <div class="flex justify-between"><span>Package Weight</span><span id="summaryWeight">0 g</span></div>
@@ -335,6 +353,7 @@
             <span>Total Payable Amount</span><span id="summaryGrandTotal" class="text-[#2D5A27]">₹0</span>
           </div>
         </div>
+
         <div id="upiCard" class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center">
           <p class="font-bold text-emerald-900 text-xs mb-1">Instant UPI Payment</p>
           <img id="upiQrImg" src="" alt="UPI QR" class="w-32 h-32 mx-auto rounded-lg border border-emerald-200 shadow-sm bg-white" />
@@ -392,28 +411,37 @@
       return clean.startsWith('http') ? clean : "https://shreejufoods.github.io/Shreeju-Foods/logo.png";
     }
 
-    // INDEPENDENT ASYNC LOADING: Ek doosre ka wait nahi karenge!
     function init() {
-      // 1. Products sabse pehle load honge
+      // 1. Restore Persistent Cart from LocalStorage
+      try {
+        const savedCart = localStorage.getItem('shreeju_saved_cart');
+        if (savedCart) {
+          state.cart = JSON.parse(savedCart);
+        }
+      } catch(e) {}
+
+      // 2. Auto-fill Saved Customer Profile
+      loadCustomerProfile();
+      loadPastOrderInfo();
+      updateCartDisplay();
+
+      // 3. Parallel Instant Data Fetching
       fetchFastCSV(SHEET_URLS.products, 30).then(rows => {
         state.products = rows.filter(r => (r.InStock || "").toUpperCase() === "YES");
         renderCatalog();
       });
 
-      // 2. Categories load hongi
       fetchFastCSV(SHEET_URLS.categories, 300).then(rows => {
         state.categories = rows.filter(r => (r.Active || "").toUpperCase() === "YES");
         renderCategories();
         if (state.products.length) renderCatalog();
       });
 
-      // 3. Settings load hongi
       fetchFastCSV(SHEET_URLS.settings, 300).then(rows => {
         rows.forEach(r => { if(r.SettingKey) state.settings[r.SettingKey.trim()] = (r.Value || "").trim(); });
         applySettings();
       });
 
-      // 4. Reviews load honge
       fetchFastCSV(SHEET_URLS.reviews, 300).then(rows => {
         state.reviews = rows.filter(r => (r.Approved || "").toUpperCase() === "YES");
         renderReviews();
@@ -432,6 +460,60 @@
           error: () => resolve([])
         });
       });
+    }
+
+    // Customer Profile Storage
+    function saveCustomerProfile() {
+      const profile = {
+        name: document.getElementById('custName').value.trim(),
+        phone: document.getElementById('custPhone').value.trim(),
+        address: document.getElementById('custAddress').value.trim(),
+        city: document.getElementById('custCity').value.trim(),
+        pincode: document.getElementById('custPincode').value.trim()
+      };
+      localStorage.setItem('shreeju_customer_profile', JSON.stringify(profile));
+    }
+
+    function loadCustomerProfile() {
+      try {
+        const saved = localStorage.getItem('shreeju_customer_profile');
+        if (saved) {
+          const profile = JSON.parse(saved);
+          if (profile.name) document.getElementById('custName').value = profile.name;
+          if (profile.phone) document.getElementById('custPhone').value = profile.phone;
+          if (profile.address) document.getElementById('custAddress').value = profile.address;
+          if (profile.city) document.getElementById('custCity').value = profile.city;
+          if (profile.pincode) document.getElementById('custPincode').value = profile.pincode;
+        }
+      } catch(e) {}
+    }
+
+    // Past Orders & Reorder Logic
+    function loadPastOrderInfo() {
+      try {
+        const past = localStorage.getItem('shreeju_last_order');
+        if (past) {
+          const order = JSON.parse(past);
+          if (order && order.items && order.items.length) {
+            document.getElementById('pastOrderDate').textContent = order.date || '';
+            document.getElementById('pastOrderSummary').textContent = order.items.map(i => `${i.name} (${i.size}) x${i.qty}`).join(', ');
+            document.getElementById('pastOrderSection').classList.remove('hidden');
+          }
+        }
+      } catch(e) {}
+    }
+
+    function reorderPastItems() {
+      try {
+        const past = localStorage.getItem('shreeju_last_order');
+        if (!past) return;
+        const order = JSON.parse(past);
+        if (order && order.cartState) {
+          state.cart = Object.assign({}, state.cart, order.cartState);
+          updateCartDisplay();
+          alert("Pichle order ke items basket me add ho gaye hain!");
+        }
+      } catch(e) {}
     }
 
     function applySettings() {
@@ -769,6 +851,11 @@
     }
 
     function updateCartDisplay() {
+      // Save Cart to LocalStorage for persistence
+      try {
+        localStorage.setItem('shreeju_saved_cart', JSON.stringify(state.cart));
+      } catch(e) {}
+
       const keys = Object.keys(state.cart);
       const totalItems = keys.reduce((acc, k) => acc + state.cart[k].qty, 0);
       document.getElementById('cartCount').textContent = totalItems;
@@ -964,6 +1051,10 @@
         return;
       }
 
+      // Save Customer Profile & Order History Locally
+      saveCustomerProfile();
+      
+      const pastOrderItems = [];
       phone = phone.replace(/^0+/, '');
       let orderSummary = "";
       let itemsArray = [];
@@ -971,7 +1062,18 @@
         const it = state.cart[k];
         orderSummary += `${idx + 1}. ${it.name} [${it.size}] x ${it.qty} = Rs. ${it.price * it.qty}\n`;
         itemsArray.push(`${it.name} (${it.size}) x${it.qty}`);
+        pastOrderItems.push({ name: it.name, size: it.size, price: it.price, qty: it.qty });
       });
+
+      // Save Last Order for Re-order feature
+      try {
+        const orderHistory = {
+          date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
+          items: pastOrderItems,
+          cartState: Object.assign({}, state.cart)
+        };
+        localStorage.setItem('shreeju_last_order', JSON.stringify(orderHistory));
+      } catch(e) {}
 
       const subtotal = document.getElementById('summarySubtotal').textContent;
       const weight = document.getElementById('summaryWeight').textContent;
