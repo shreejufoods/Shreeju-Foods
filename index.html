@@ -14,26 +14,36 @@
 </head>
 <body class="bg-[#F8F9FA] text-gray-800 font-sans pb-24">
 
-  <!-- Announcement Bar -->
+  <!-- Top Announcement Bar -->
   <div id="flashBar" class="bg-[#1E3A2B] text-[#E8F5E9] text-xs md:text-sm py-2 px-4 text-center font-medium hidden">
     <span id="flashText"></span>
   </div>
 
   <!-- Header -->
   <header class="bg-white border-b sticky top-0 z-40 shadow-sm">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
       <div class="flex items-center gap-2">
         <span class="text-2xl">🌿</span>
         <div>
-          <h1 id="storeName" class="text-xl font-bold text-gray-900 leading-tight">Shreeju Foods</h1>
-          <p id="storeTagline" class="text-xs text-gray-500 hidden md:block">100% Natural & Chemical Free</p>
+          <h1 id="storeName" class="text-lg md:text-xl font-bold text-gray-900 leading-tight">Shreeju Foods</h1>
+          <p id="storeTagline" class="text-[11px] text-gray-500 hidden md:block">100% Natural & Chemical Free</p>
         </div>
       </div>
-      <button onclick="toggleCart()" class="relative bg-[#2D5A27] text-white px-4 py-2 rounded-xl flex items-center gap-2 font-medium hover:bg-[#1E3A2B] transition shadow-sm">
-        <i class="fa-solid fa-bag-shopping"></i>
-        <span>Basket</span>
-        <span id="cartCount" class="bg-amber-400 text-gray-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
-      </button>
+      
+      <div class="flex items-center gap-2">
+        <!-- Share Store / Recommend Button -->
+        <button onclick="shareStore()" class="border border-green-700 text-green-800 hover:bg-green-50 px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-semibold transition shadow-sm">
+          <i class="fa-solid fa-share-nodes text-green-700"></i>
+          <span class="hidden sm:inline">Recommend Store</span>
+        </button>
+
+        <!-- Basket Button -->
+        <button onclick="toggleCart()" class="relative bg-[#2D5A27] text-white px-3.5 py-1.5 rounded-xl flex items-center gap-2 text-xs font-medium hover:bg-[#1E3A2B] transition shadow-sm">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span>Basket</span>
+          <span id="cartCount" class="bg-amber-400 text-gray-900 text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">0</span>
+        </button>
+      </div>
     </div>
 
     <!-- Search Bar -->
@@ -55,31 +65,31 @@
   <!-- Product Catalog -->
   <main class="max-w-6xl mx-auto px-4 mt-6">
     <div id="productsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      <p class="col-span-full text-center text-gray-500 py-10">Loading products...</p>
+      <p class="col-span-full text-center text-gray-400 py-10 text-xs">Loading products...</p>
     </div>
   </main>
 
-  <!-- Customer UGC Snaps -->
+  <!-- Customer Reviews Section -->
   <section class="max-w-6xl mx-auto px-4 mt-12 mb-8">
-    <div class="flex items-center justify-between mb-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
       <div>
-        <h2 class="text-lg font-bold text-gray-900">Real Customer Snaps & Reviews</h2>
+        <h2 class="text-base md:text-lg font-bold text-gray-900">🌟 Real Customer Reviews</h2>
         <p class="text-xs text-gray-500">Shared by verified family members</p>
       </div>
-      <button onclick="toggleReviewModal()" class="bg-[#1E3A2B] hover:bg-[#2D5A27] text-white px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-sm transition flex items-center gap-1.5">
-        <i class="fa-solid fa-camera"></i> Write Review / Share Snap
+      <button onclick="toggleReviewModal()" class="inline-flex items-center justify-center gap-1.5 bg-[#1E3A2B] hover:bg-[#2D5A27] text-white px-3.5 py-1.5 rounded-xl text-xs font-bold shadow transition">
+        <i class="fa-solid fa-camera"></i> Write Review
       </button>
     </div>
-    <div id="reviewsGrid" class="flex gap-4 overflow-x-auto hide-scrollbar pb-2"></div>
+    <div id="reviewsGrid" class="flex gap-4 overflow-x-auto hide-scrollbar pb-3"></div>
   </section>
 
-  <!-- Review Submission Modal (Add-on) -->
+  <!-- Review Modal -->
   <div id="reviewModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
       <div class="p-4 border-b bg-gray-50 flex items-center justify-between">
         <div>
-          <h3 class="font-bold text-gray-900 text-sm">Write a Review & Share Snap</h3>
-          <p class="text-[11px] text-gray-500">Apna anubhav aur dish ki photo share karein</p>
+          <h3 class="font-bold text-gray-900 text-sm">Write a Review</h3>
+          <p class="text-[11px] text-gray-500">Apna anubhav share karein</p>
         </div>
         <button onclick="toggleReviewModal()" class="text-gray-400 hover:text-gray-800 text-2xl leading-none">&times;</button>
       </div>
@@ -104,60 +114,44 @@
           <input type="text" id="revCity" placeholder="Jaise: Hathras ya Delhi" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none focus:border-green-600" />
         </div>
         <div>
-          <label class="block text-gray-700 font-medium mb-1">Product Name *</label>
-          <input type="text" id="revProduct" placeholder="Jaise: Bilona Ghee / Pure Haldi" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none focus:border-green-600" />
+          <label class="block text-gray-700 font-medium mb-1">Product *</label>
+          <input type="text" id="revProduct" placeholder="Jaise: Bilona Ghee / Haldi" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none focus:border-green-600" />
         </div>
         <div>
-          <label class="block text-gray-700 font-medium mb-1">Your Review *</label>
-          <textarea id="revComment" rows="2" placeholder="Taste, khushbu aur shuddhata kaisi lagi?" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none focus:border-green-600"></textarea>
+          <label class="block text-gray-700 font-medium mb-1">Review *</label>
+          <textarea id="revComment" rows="2" placeholder="Quality kaisi lagi?" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none focus:border-green-600"></textarea>
         </div>
-        <p class="text-[10px] text-amber-800 bg-amber-50 p-2 rounded-lg border border-amber-200">
-          📸 Submit par click karte hi WhatsApp khulega jahan aap dish/product ki photo bhej sakte hain.
-        </p>
         <button onclick="submitCustomerReview()" class="w-full bg-[#25D366] hover:bg-[#1EBE5D] text-white py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow transition">
-          <i class="fa-brands fa-whatsapp text-base"></i> Submit Review & Attach Photo
+          <i class="fa-brands fa-whatsapp text-base"></i> Submit Review on WhatsApp
         </button>
       </div>
     </div>
   </div>
-  <!-- Full Height Smooth Scroll Cart Drawer -->
+
+  <!-- Cart Modal -->
   <div id="cartModal" class="fixed inset-0 bg-black/50 z-50 hidden flex justify-end">
     <div class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl">
-      
-      <!-- Drawer Header -->
       <div class="p-4 border-b flex items-center justify-between bg-gray-50 shrink-0">
-        <div>
-          <h3 class="font-bold text-gray-800 text-base">Your Basket</h3>
-          <p class="text-[11px] text-gray-500">Review items and delivery details</p>
-        </div>
-        <button onclick="toggleCart()" class="text-gray-500 hover:text-gray-800 text-2xl p-1 leading-none">&times;</button>
+        <h3 class="font-bold text-gray-800 text-base">Your Basket</h3>
+        <button onclick="toggleCart()" class="text-gray-500 hover:text-gray-800 text-2xl leading-none">&times;</button>
       </div>
-
-      <!-- Drawer Scrollable Body -->
       <div class="flex-1 overflow-y-auto p-4 space-y-4">
-        
-        <!-- Cart Items List -->
         <div>
           <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Order Items</h4>
           <div id="cartItemsList" class="divide-y border rounded-xl p-2 bg-gray-50"></div>
         </div>
-
-        <!-- Customer & Delivery Details -->
         <div>
           <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Delivery Address</h4>
           <div class="space-y-2">
-            <input type="text" id="custName" placeholder="Customer Full Name *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
-            <input type="tel" id="custPhone" placeholder="10-digit WhatsApp Number *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
-            <textarea id="custAddress" placeholder="House / Flat No, Street, Colony, Landmark *" rows="2" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none"></textarea>
-            
+            <input type="text" id="custName" placeholder="Full Name *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none" />
+            <input type="tel" id="custPhone" placeholder="WhatsApp Number *" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none" />
+            <textarea id="custAddress" placeholder="House / Street / Colony *" rows="2" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none"></textarea>
             <div class="grid grid-cols-2 gap-2">
-              <input type="text" id="custCity" placeholder="City / District *" class="p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
-              <input type="text" id="custPincode" placeholder="6-digit Pincode *" class="p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-green-600 outline-none" />
+              <input type="text" id="custCity" placeholder="City *" class="p-2.5 rounded-lg border border-gray-300 text-xs outline-none" />
+              <input type="text" id="custPincode" placeholder="Pincode *" class="p-2.5 rounded-lg border border-gray-300 text-xs outline-none" />
             </div>
           </div>
         </div>
-
-        <!-- Price Summary -->
         <div class="border rounded-xl p-3 bg-gray-50 space-y-2 text-xs text-gray-600">
           <div class="flex justify-between"><span>Items Total</span><span id="summarySubtotal" class="font-semibold text-gray-800">₹0</span></div>
           <div class="flex justify-between"><span>Package Weight</span><span id="summaryWeight">0 g</span></div>
@@ -166,24 +160,17 @@
             <span>Total Payable Amount</span><span id="summaryGrandTotal" class="text-[#2D5A27]">₹0</span>
           </div>
         </div>
-
-        <!-- UPI QR Display -->
         <div id="upiCard" class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center">
-          <p class="font-bold text-emerald-900 text-xs mb-1">UPI Payment (Optional)</p>
-          <img id="upiQrImg" src="" alt="UPI QR" class="w-36 h-36 mx-auto rounded-lg border border-emerald-200 shadow-sm bg-white" />
-          <p class="text-[11px] text-gray-600 mt-1.5 font-medium">Google Pay / PhonePe / Paytm / BHIM</p>
-          <p class="text-[10px] text-gray-500 mt-0.5">Aap chahein toh scan karke pay kar sakte hain ya confirmation par discuss kar sakte hain.</p>
+          <p class="font-bold text-emerald-900 text-xs mb-1">Instant UPI Payment</p>
+          <img id="upiQrImg" src="" alt="UPI QR" class="w-32 h-32 mx-auto rounded-lg border border-emerald-200 shadow-sm bg-white" />
+          <p class="text-[10px] text-gray-500 mt-1">Google Pay / PhonePe / Paytm / BHIM</p>
         </div>
-
       </div>
-
-      <!-- Fixed Drawer Footer -->
       <div class="p-3 border-t bg-white shrink-0 shadow-lg">
-        <button id="orderSubmitBtn" onclick="processWhatsAppOrder()" class="w-full bg-[#25D366] hover:bg-[#1EBE5D] text-white py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md transition active:scale-[0.99]">
+        <button onclick="processWhatsAppOrder()" class="w-full bg-[#25D366] hover:bg-[#1EBE5D] text-white py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md transition">
           <i class="fa-brands fa-whatsapp text-xl"></i> Place Order on WhatsApp
         </button>
       </div>
-
     </div>
   </div>
 
@@ -203,28 +190,37 @@
       reviews: [],
       selectedCategory: "ALL",
       cart: {},
-      grandTotal: 0
+      grandTotal: 0,
+      selectedRating: 5
     };
 
-    // High-Speed Instant Cache System (400+ Products Ready)
-    async function init() {
-      // 1. Agar pehle se saved data hai, toh 0.1 second me turant screen par dikhao
-      const cachedProducts = localStorage.getItem('sf_cached_products');
-      const cachedCategories = localStorage.getItem('sf_cached_categories');
-      const cachedSettings = localStorage.getItem('sf_cached_settings');
-
-      if (cachedProducts && cachedCategories) {
-        state.products = JSON.parse(cachedProducts);
-        state.categories = JSON.parse(cachedCategories);
-        if (cachedSettings) {
-          state.settings = JSON.parse(cachedSettings);
-          applySettings();
+    // Smart Image URL Converter (Direct Image Handler)
+    function fixImageUrl(url) {
+      if (!url || !url.startsWith('http')) return 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400';
+      // Agar Google Drive ka link hai, toh direct thumbnail me convert karein
+      if (url.includes('drive.google.com')) {
+        const idMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+        if (idMatch && idMatch[1]) {
+          return `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w600`;
         }
+      }
+      return url;
+    }
+
+    async function init() {
+      // 1. Instant Cache Render
+      const cp = localStorage.getItem('sf_cached_products');
+      const cc = localStorage.getItem('sf_cached_categories');
+      const cs = localStorage.getItem('sf_cached_settings');
+      if (cp && cc) {
+        state.products = JSON.parse(cp);
+        state.categories = JSON.parse(cc);
+        if (cs) { state.settings = JSON.parse(cs); applySettings(); }
         renderCategories();
         renderProducts();
       }
 
-      // 2. Background me silently fresh data laao bina screen freeze kiye
+      // 2. Parallel Background Sync
       Promise.all([
         fetchFastCSV(SHEET_URLS.settings).then(rows => {
           rows.forEach(r => { if(r.SettingKey) state.settings[r.SettingKey.trim()] = (r.Value || "").trim(); });
@@ -254,13 +250,13 @@
           download: true,
           header: true,
           skipEmptyLines: true,
-          worker: true, // Multi-threading worker for ultra speed
+          worker: true,
           complete: (results) => resolve(results.data || []),
           error: () => resolve([])
         });
       });
     }
-    
+
     function applySettings() {
       const s = state.settings;
       if (s.StoreName) document.getElementById('storeName').textContent = s.StoreName;
@@ -317,7 +313,7 @@
       });
 
       if(!list.length) {
-        grid.innerHTML = `<p class="col-span-full text-center text-gray-400 py-8">Koi product nahi mila.</p>`;
+        grid.innerHTML = `<p class="col-span-full text-center text-gray-400 py-8 text-xs">Koi product nahi mila.</p>`;
         return;
       }
 
@@ -325,16 +321,20 @@
         const variants = parseVariants(prod.Variants);
         const first = variants[0] || { size: 'Pack', price: 0, mrp: 0 };
         const safeId = prod.ProductID.replace(/[^a-zA-Z0-9]/g, '');
+        const validImg = fixImageUrl(prod.MainImageURL);
 
         return `
-          <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm flex flex-col justify-between">
-            <div class="relative">
-              <img src="${prod.MainImageURL || 'https://via.placeholder.com/300'}" alt="${prod.ProductName}" class="w-full h-36 object-cover bg-gray-50" />
+          <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition">
+            <div class="relative bg-gray-50">
+              <img src="${validImg}" alt="${prod.ProductName}" onerror="this.src='https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400'" class="w-full h-36 object-cover" />
               ${prod.Badge ? `<span class="absolute top-2 left-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm">${prod.Badge}</span>` : ''}
-              <button onclick="shareOnWhatsApp('${prod.ProductName}', '${first.price}')" class="absolute top-2 right-2 bg-white/90 text-gray-600 rounded-full h-7 w-7 flex items-center justify-center text-xs shadow hover:text-[#25D366]">
+              
+              <!-- Product Share Button -->
+              <button onclick="shareProduct('${prod.ProductName}', '${first.price}')" title="Share with Friends" class="absolute top-2 right-2 bg-white/95 text-gray-700 hover:text-[#25D366] rounded-full h-7 w-7 flex items-center justify-center text-xs shadow-sm transition">
                 <i class="fa-solid fa-share-nodes"></i>
               </button>
             </div>
+            
             <div class="p-3 flex-1 flex flex-col justify-between">
               <div>
                 <h4 class="font-bold text-gray-900 text-xs md:text-sm line-clamp-2 leading-snug">${prod.ProductName}</h4>
@@ -366,7 +366,6 @@
     }
 
     const selectedVariantState = {};
-
     function setVariant(safeId, index, price, mrp, size) {
       selectedVariantState[safeId] = { index, price, mrp, size };
       document.querySelectorAll(`.vbtn-${safeId}`).forEach((btn, i) => {
@@ -480,20 +479,105 @@
       }
     }
 
+    // --- Share & Recommendation Logic ---
+    function shareStore() {
+      const storeUrl = window.location.href;
+      const shareMsg = `Namaste! Shreeju Foods se 100% pure, natural and chemical-free spices, bilona ghee aur dry fruits mangwane ke liye yahan visit karein: ${storeUrl}`;
+      
+      if (navigator.share) {
+        navigator.share({
+          title: 'Shreeju Foods',
+          text: shareMsg,
+          url: storeUrl
+        }).catch(() => {});
+      } else {
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareMsg)}`, '_blank');
+      }
+    }
+
+    function shareProduct(name, price) {
+      const storeUrl = window.location.href;
+      const msg = `Dekhiye Shreeju Foods ka 100% natural and chemical-free ${name} sirf ₹${price} me! Order karein: ${storeUrl}`;
+      
+      if (navigator.share) {
+        navigator.share({
+          title: name,
+          text: msg,
+          url: storeUrl
+        }).catch(() => {});
+      } else {
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+      }
+    }
+
+    // --- Reviews Logic ---
     function renderReviews() {
       const grid = document.getElementById('reviewsGrid');
       if(!state.reviews.length) {
-        grid.innerHTML = `<p class="text-xs text-gray-400">No reviews yet.</p>`;
+        grid.innerHTML = `<p class="text-xs text-gray-400 py-2">Reviews loading...</p>`;
         return;
       }
-      grid.innerHTML = state.reviews.map(rev => `
-        <div class="min-w-[200px] max-w-[220px] bg-white border border-gray-100 rounded-xl p-2.5 shadow-sm flex-shrink-0 text-xs">
-          <img src="${rev.PhotoURL || 'https://via.placeholder.com/150'}" alt="Snap" class="w-full h-24 object-cover rounded-lg mb-2" />
-          <div class="text-amber-500 text-[10px] mb-1">${'⭐'.repeat(parseInt(rev.Rating) || 5)}</div>
-          <p class="text-gray-700 italic line-clamp-2 text-[11px]">"${rev.ReviewText}"</p>
-          <span class="text-[10px] font-bold text-gray-900 block mt-1">- ${rev.CustomerName} (${rev.City || 'Verified'})</span>
-        </div>
-      `).join('');
+      grid.innerHTML = state.reviews.map(rev => {
+        const rating = parseInt(rev.Rating) || 5;
+        const starsHtml = '★'.repeat(rating) + '☆'.repeat(5 - rating);
+        return `
+          <div class="min-w-[220px] max-w-[240px] bg-white border border-gray-100 rounded-xl p-3 shadow-sm flex-shrink-0 text-xs flex flex-col justify-between">
+            <div>
+              <div class="text-amber-400 text-xs mb-1">${starsHtml}</div>
+              <p class="text-gray-700 italic line-clamp-3 text-[11px]">"${rev.ReviewText}"</p>
+            </div>
+            <div class="border-t pt-2 mt-2">
+              <span class="font-bold text-gray-900 block text-[11px]">${rev.CustomerName}</span>
+              <span class="text-gray-400 text-[10px]">${rev.City || 'India'}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleReviewModal() {
+      document.getElementById('reviewModal').classList.toggle('hidden');
+    }
+
+    function setRating(val) {
+      state.selectedRating = val;
+      const labels = { 1:"1 Star", 2:"2 Star", 3:"3 Star", 4:"4 Star - Bahut badhiya!", 5:"5 Star - Lajawaab & Shuddh!" };
+      document.getElementById('ratingLabel').textContent = labels[val] || `${val} Star`;
+      for(let i=1; i<=5; i++) {
+        document.getElementById(`star-${i}`).style.color = (i <= val) ? '#f59e0b' : '#d1d5db';
+      }
+    }
+
+    function submitCustomerReview() {
+      const name = document.getElementById('revName').value.trim();
+      const city = document.getElementById('revCity').value.trim();
+      const product = document.getElementById('revProduct').value.trim();
+      const comment = document.getElementById('revComment').value.trim();
+      const waNumber = state.settings.WhatsAppNumber || '919690002789';
+
+      if (!name || !city || !product || !comment) {
+        alert("Kripya saari details bharein!");
+        return;
+      }
+
+      const payload = new URLSearchParams();
+      payload.append("action", "review");
+      payload.append("name", name);
+      payload.append("city", city);
+      payload.append("product", product);
+      payload.append("rating", state.selectedRating);
+      payload.append("comment", comment);
+
+      fetch(SHEET_URLS.orderScript, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: payload.toString()
+      });
+
+      const msg = `*CUSTOMER REVIEW*\nRating: ${state.selectedRating}/5\nName: ${name}\nCity: ${city}\nProduct: ${product}\nReview: "${comment}"`;
+      toggleReviewModal();
+      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
     function toggleCart() {
@@ -504,11 +588,6 @@
       renderProducts();
     }
 
-    function shareOnWhatsApp(name, price) {
-      const msg = `Check out this 100% natural & chemical-free ${name} at ₹${price}: ${window.location.href}`;
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
-    }
-
     function processWhatsAppOrder() {
       const name = document.getElementById('custName').value.trim();
       let phone = document.getElementById('custPhone').value.trim();
@@ -517,18 +596,17 @@
       const pincode = document.getElementById('custPincode').value.trim();
 
       if (!name || !phone || !address || !city || !pincode) {
-        alert("Kripya apna Naam, Phone Number, Poora Address, City aur Pincode zaroor bharein!");
+        alert("Kripya saari delivery details bharein!");
         return;
       }
 
       const keys = Object.keys(state.cart);
       if(!keys.length) {
-        alert("Aapka basket khali hai!");
+        alert("Basket khali hai!");
         return;
       }
 
       phone = phone.replace(/^0+/, '');
-
       let orderSummary = "";
       let itemsArray = [];
       keys.forEach((k, idx) => {
@@ -544,7 +622,6 @@
       const upi = state.settings.UPI_ID || '9690002789@upi';
       const waNumber = state.settings.WhatsAppNumber || '919690002789';
 
-      // Background write to Google Sheet
       const payload = new URLSearchParams();
       payload.append("name", name);
       payload.append("phone", phone);
@@ -582,64 +659,8 @@
       const waURL = `https://wa.me/${waNumber}?text=${encodeURIComponent(fullMessage)}`;
       window.open(waURL, '_blank');
     }
-// --- Review Add-on Logic ---
-    let selectedRatingVal = 5;
-    function toggleReviewModal() {
-      document.getElementById('reviewModal').classList.toggle('hidden');
-    }
-    function setRating(val) {
-      selectedRatingVal = val;
-      const labels = { 1:"1 Star", 2:"2 Star", 3:"3 Star", 4:"4 Star - Bahut badhiya!", 5:"5 Star - Lajawaab & Shuddh!" };
-      document.getElementById('ratingLabel').textContent = labels[val] || `${val} Star`;
-      for(let i = 1; i <= 5; i++) {
-        const star = document.getElementById(`star-${i}`);
-        star.style.color = (i <= val) ? '#f59e0b' : '#d1d5db';
-      }
-    }
-    
-function submitCustomerReview() {
-      const name = document.getElementById('revName').value.trim();
-      const city = document.getElementById('revCity').value.trim();
-      const product = document.getElementById('revProduct').value.trim();
-      const comment = document.getElementById('revComment').value.trim();
-      const waNumber = (state.settings && state.settings.WhatsAppNumber) ? state.settings.WhatsAppNumber : '919690002789';
 
-      if (!name || !city || !product || !comment) {
-        alert("Kripya Naam, City, Product aur Review zaroor bharein!");
-        return;
-      }
-
-      // Sheet me auto-save
-      const payload = new URLSearchParams();
-      payload.append("action", "review");
-      payload.append("name", name);
-      payload.append("city", city);
-      payload.append("product", product);
-      payload.append("rating", selectedRatingVal);
-      payload.append("comment", comment);
-
-      fetch(SHEET_URLS.orderScript, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: payload.toString()
-      });
-
-      const stars = '⭐'.repeat(selectedRatingVal);
-      const msg = 
-        `*CUSTOMER REVIEW & DISH SNAP*\n\n` +
-        `⭐ *Rating:* ${selectedRatingVal}/5 (${stars})\n` +
-        `👤 *Customer Name:* ${name}\n` +
-        `📍 *City:* ${city}\n` +
-        `🌿 *Product:* ${product}\n\n` +
-        `💬 *Review:*\n"${comment}"\n\n` +
-        `📸 *(Maine photo niche attach kar di hai, kripya website par feature karein)*`;
-
-      toggleReviewModal();
-      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
-    }
-    
-  window.onload = init;
+    window.onload = init;
   </script>
 </body>
 </html>
