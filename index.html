@@ -14,26 +14,36 @@
 </head>
 <body class="bg-[#F8F9FA] text-gray-800 font-sans pb-24">
 
+  <!-- Top Announcement Bar -->
   <div id="flashBar" class="bg-[#1E3A2B] text-[#E8F5E9] text-xs md:text-sm py-2 px-4 text-center font-medium hidden">
-    <span id="flashText"></span>
+    <span id="flashText">100% Natural & Chemical Free | Free Shipping on orders above ₹499!</span>
   </div>
 
+  <!-- Header -->
   <header class="bg-white border-b sticky top-0 z-40 shadow-sm">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <img id="storeLogo" src="https://shreejufoods.github.io/Shreeju-Foods/logo.png" alt="Shreeju Foods" class="h-10 w-auto object-contain rounded-lg" onerror="this.style.display='none'" />
+      <div class="flex items-center gap-3 cursor-pointer" onclick="selectCategory('ALL')">
+        <img id="storeLogo" src="https://shreejufoods.github.io/Shreeju-Foods/logo.png" alt="Shreeju Foods" class="h-11 w-auto object-contain rounded-lg" onerror="this.src='https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=100'" />
         <div>
           <h1 id="storeName" class="text-lg md:text-xl font-bold text-gray-900 leading-tight">Shreeju Foods</h1>
-          <p id="storeTagline" class="text-[11px] text-gray-500 hidden md:block">100% Natural & Chemical Free</p>
+          <p id="storeTagline" class="text-[11px] text-gray-500 hidden sm:block">100% Natural & Chemical Free</p>
         </div>
       </div>
       
       <div class="flex items-center gap-2">
-        <button onclick="shareStore()" class="border border-green-700 text-green-800 hover:bg-green-50 px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-semibold transition shadow-sm">
-          <i class="fa-solid fa-share-nodes text-green-700"></i>
-          <span class="hidden sm:inline">Recommend Store</span>
+        <!-- Contact Us Header Button -->
+        <button onclick="toggleContactModal()" class="border border-gray-300 hover:border-gray-400 text-gray-700 px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-semibold transition shadow-sm bg-white">
+          <i class="fa-solid fa-headset text-green-700"></i>
+          <span class="hidden sm:inline">Contact</span>
         </button>
 
+        <!-- Share Store / Recommend Button -->
+        <button onclick="shareStore()" class="border border-green-700 text-green-800 hover:bg-green-50 px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-semibold transition shadow-sm">
+          <i class="fa-solid fa-share-nodes text-green-700"></i>
+          <span class="hidden md:inline">Recommend</span>
+        </button>
+
+        <!-- Basket Button -->
         <button onclick="toggleCart()" class="relative bg-[#2D5A27] text-white px-3.5 py-1.5 rounded-xl flex items-center gap-2 text-xs font-medium hover:bg-[#1E3A2B] transition shadow-sm">
           <i class="fa-solid fa-bag-shopping"></i>
           <span>Basket</span>
@@ -42,31 +52,62 @@
       </div>
     </div>
 
+    <!-- Search Bar -->
     <div class="max-w-6xl mx-auto px-4 pb-3">
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gray-400"></i>
-        <input type="text" id="searchInput" oninput="filterProducts()" placeholder="Search spices, ghee, dry fruits, ubtan..." class="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-[#2D5A27] bg-gray-50 text-sm" />
+        <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Search spices, ghee, dry fruits, ubtan..." class="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-[#2D5A27] bg-gray-50 text-sm" />
       </div>
     </div>
   </header>
 
+  <!-- Category Filter Bar -->
   <div class="max-w-6xl mx-auto px-4 mt-4">
     <div id="categoriesContainer" class="flex gap-2 overflow-x-auto hide-scrollbar py-1">
       <button onclick="selectCategory('ALL')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-[#2D5A27] text-white whitespace-nowrap shadow-sm">All Items</button>
     </div>
   </div>
 
-  <main class="max-w-6xl mx-auto px-4 mt-6">
-    <div id="productsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      <p class="col-span-full text-center text-gray-400 py-10 text-xs">Loading products...</p>
+  <!-- Trust Badges (FSSAI, GST, Natural) -->
+  <div class="max-w-6xl mx-auto px-4 mt-4">
+    <div class="bg-white border border-gray-200 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs text-gray-600 shadow-sm">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">🌿</span>
+        <div>
+          <span class="font-bold text-gray-800 block leading-tight">100% Shuddh</span>
+          <span class="text-[10px] text-gray-500">Natural & Chemical Free</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="font-black text-blue-900 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 tracking-wider text-[11px]">fssai</span>
+        <div>
+          <span class="font-bold text-gray-800 block leading-tight">FSSAI Certified</span>
+          <span id="badgeFssaiNo" class="text-[10px] text-gray-500">Reg: Available on Invoice</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="font-black text-emerald-900 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 tracking-wider text-[11px]">GST</span>
+        <div>
+          <span class="font-bold text-gray-800 block leading-tight">GST Registered</span>
+          <span id="badgeGstNo" class="text-[10px] text-gray-500">Verified Business</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Catalog Area -->
+  <main class="max-w-6xl mx-auto px-4 mt-6" id="mainCatalog">
+    <div id="productsGrid" class="space-y-8">
+      <p class="text-center text-gray-400 py-10 text-xs">Loading products...</p>
     </div>
   </main>
 
+  <!-- Customer Reviews Section -->
   <section class="max-w-6xl mx-auto px-4 mt-12 mb-8">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
       <div>
         <h2 class="text-base md:text-lg font-bold text-gray-900">🌟 Real Customer Reviews</h2>
-        <p class="text-xs text-gray-500">Shared by verified family members</p>
+        <p class="text-xs text-gray-500">Shared by verified buyers</p>
       </div>
       <button onclick="toggleReviewModal()" class="inline-flex items-center justify-center gap-1.5 bg-[#1E3A2B] hover:bg-[#2D5A27] text-white px-3.5 py-1.5 rounded-xl text-xs font-bold shadow transition">
         <i class="fa-solid fa-camera"></i> Write Review
@@ -75,6 +116,143 @@
     <div id="reviewsGrid" class="flex gap-4 overflow-x-auto hide-scrollbar pb-3"></div>
   </section>
 
+  <!-- Footer Contact & Info Section -->
+  <footer class="bg-white border-t mt-12 pt-8 pb-16 text-gray-600 text-xs">
+    <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <img src="https://shreejufoods.github.io/Shreeju-Foods/logo.png" alt="Shreeju Foods" class="h-8 w-auto object-contain rounded" onerror="this.style.display='none'" />
+          <h3 class="font-bold text-gray-900 text-sm">Shreeju Foods</h3>
+        </div>
+        <p class="text-gray-500 text-[11px] leading-relaxed">
+          Purity you can trust. Handcrafted and traditionally prepared unpolished spices, pure bilona ghee, nuts, and natural herbs.
+        </p>
+        <div class="mt-3 text-[11px] space-y-1">
+          <p><span class="font-bold text-gray-700">FSSAI No:</span> <span id="footerFssai">In Process / Registered</span></p>
+          <p><span class="font-bold text-gray-700">GST No:</span> <span id="footerGst">Available on Request</span></p>
+        </div>
+      </div>
+      
+      <div>
+        <h4 class="font-bold text-gray-900 text-xs uppercase tracking-wider mb-2">Contact & Operational Address</h4>
+        <p class="text-gray-600 leading-relaxed text-[11px]">
+          📍 <span id="footerAddress">1306 Agra Road, Hathras, Uttar Pradesh - 204101</span>
+        </p>
+        <p class="mt-2 text-[11px]">
+          📞 <span class="font-semibold text-gray-800">Phone / WhatsApp:</span> 
+          <a id="footerPhoneLink" href="tel:+919690002789" class="text-green-700 font-bold hover:underline">+91 9690002789</a>
+        </p>
+        <p class="mt-1 text-[11px]">
+          ✉️ <span class="font-semibold text-gray-800">Email:</span> 
+          <a id="footerEmailLink" href="mailto:care.shreejufoods@gmail.com" class="text-green-700 hover:underline">care.shreejufoods@gmail.com</a>
+        </p>
+      </div>
+
+      <div>
+        <h4 class="font-bold text-gray-900 text-xs uppercase tracking-wider mb-2">Purity Guarantee</h4>
+        <ul class="space-y-1.5 text-[11px] text-gray-500">
+          <li>✓ 100% Natural and Chemical Free</li>
+          <li>✓ No synthetic aroma or artificial preservatives</li>
+          <li>✓ Direct home dispatch with secure packaging</li>
+        </ul>
+        <button onclick="toggleContactModal()" class="mt-3 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold px-3 py-1.5 rounded-lg text-xs transition">
+          Have questions? Contact Team
+        </button>
+      </div>
+    </div>
+    <div class="text-center text-gray-400 text-[10px] mt-8 pt-4 border-t">
+      © 2026 Shreeju Foods. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- Product Detail Modal (Popup for Full Description & Ingredients) -->
+  <div id="productDetailModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
+    <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="p-3 border-b flex items-center justify-between bg-gray-50">
+        <h3 class="font-bold text-gray-800 text-xs uppercase tracking-wider">Product Details</h3>
+        <button onclick="closeProductDetailModal()" class="text-gray-400 hover:text-gray-800 text-2xl leading-none">&times;</button>
+      </div>
+      <div class="flex-1 overflow-y-auto p-4 space-y-4 text-xs">
+        <div class="bg-gray-50 rounded-xl p-2 flex items-center justify-center">
+          <img id="detailImg" src="" alt="Product" class="max-h-56 object-contain rounded-lg" />
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span id="detailBadge" class="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md hidden"></span>
+            <span id="detailCategory" class="text-gray-400 text-[11px]"></span>
+          </div>
+          <h2 id="detailTitle" class="text-base md:text-lg font-bold text-gray-900 mt-1"></h2>
+        </div>
+        
+        <div class="border rounded-xl p-3 bg-emerald-50/50 border-emerald-100">
+          <p class="font-bold text-[#2D5A27] text-xs mb-1">🌿 Pure & Authentic Quality</p>
+          <p id="detailDesc" class="text-gray-700 leading-relaxed text-[11px]"></p>
+        </div>
+
+        <div id="detailIngredientsBox" class="border rounded-xl p-3 bg-amber-50/40 border-amber-100">
+          <p class="font-bold text-amber-900 text-xs mb-1">📋 Ingredients / Formulation</p>
+          <p id="detailIngredients" class="text-gray-700 leading-relaxed text-[11px]"></p>
+        </div>
+
+        <div>
+          <label class="block text-gray-700 font-bold mb-1.5">Select Pack Size:</label>
+          <div id="detailVariantsList" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <div class="flex items-baseline gap-2 pt-2 border-t">
+          <span id="detailPrice" class="text-xl font-extrabold text-[#2D5A27]">₹0</span>
+          <span id="detailMrp" class="text-xs text-gray-400 line-through">₹0</span>
+        </div>
+      </div>
+      <div class="p-3 border-t bg-gray-50 flex gap-2">
+        <button id="detailShareBtn" class="border border-gray-300 text-gray-700 px-3 py-2.5 rounded-xl text-xs font-bold hover:bg-gray-100 flex items-center justify-center gap-1.5 transition">
+          <i class="fa-solid fa-share-nodes"></i> Share
+        </button>
+        <button id="detailAddCartBtn" class="flex-1 bg-gray-900 hover:bg-[#2D5A27] text-white py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow transition">
+          <i class="fa-solid fa-bag-shopping"></i> Add to Basket
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Us Modal -->
+  <div id="contactModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+      <div class="p-4 border-b bg-gray-50 flex items-center justify-between">
+        <div>
+          <h3 class="font-bold text-gray-900 text-sm">Contact Shreeju Foods</h3>
+          <p class="text-[11px] text-gray-500">We are happy to assist you!</p>
+        </div>
+        <button onclick="toggleContactModal()" class="text-gray-400 hover:text-gray-800 text-2xl leading-none">&times;</button>
+      </div>
+      <div class="p-4 space-y-3 text-xs text-gray-700">
+        <div class="border rounded-xl p-3 bg-gray-50">
+          <p class="font-bold text-gray-900 mb-0.5">🏢 Work / Dispatch Address:</p>
+          <p id="modalAddress" class="text-[11px] text-gray-600">1306 Agra Road, Hathras, Uttar Pradesh - 204101</p>
+        </div>
+        <div class="border rounded-xl p-3 bg-gray-50">
+          <p class="font-bold text-gray-900 mb-0.5">📞 WhatsApp & Call Support:</p>
+          <a id="modalPhoneLink" href="https://wa.me/919690002789" target="_blank" class="text-emerald-700 font-bold hover:underline block text-[12px]">+91 9690002789</a>
+        </div>
+        <div class="border rounded-xl p-3 bg-gray-50">
+          <p class="font-bold text-gray-900 mb-0.5">✉️ Email Support:</p>
+          <a id="modalEmailLink" href="mailto:care.shreejufoods@gmail.com" class="text-green-700 font-semibold hover:underline block text-[11px]">care.shreejufoods@gmail.com</a>
+        </div>
+        <div class="border rounded-xl p-3 bg-blue-50 border-blue-100 flex items-center justify-between">
+          <div>
+            <span class="font-bold text-blue-950 block text-[11px]">FSSAI Registered</span>
+            <span id="modalFssai" class="text-[10px] text-blue-800">Verification on Invoice</span>
+          </div>
+          <div class="text-right">
+            <span class="font-bold text-emerald-950 block text-[11px]">GST Compliance</span>
+            <span id="modalGst" class="text-[10px] text-emerald-800">Verified Firm</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Review Modal -->
   <div id="reviewModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
       <div class="p-4 border-b bg-gray-50 flex items-center justify-between">
@@ -119,6 +297,7 @@
     </div>
   </div>
 
+  <!-- Cart Modal -->
   <div id="cartModal" class="fixed inset-0 bg-black/50 z-50 hidden flex justify-end">
     <div class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl">
       <div class="p-4 border-b flex items-center justify-between bg-gray-50 shrink-0">
@@ -184,44 +363,32 @@
       selectedRating: 5
     };
 
-    // Auto-detects and fixes any image link from Sheet
-function resolveProductImage(prod) {
+    // Auto cleans markdown brackets [url](url) and resolves image
+    function resolveProductImage(prod) {
       if (!prod) return "https://shreejufoods.github.io/Shreeju-Foods/logo.png";
-      
       let raw = "";
       for (const key of Object.keys(prod)) {
         const k = key.trim().toLowerCase();
-        if (k === "mainimageurl" || k === "image" || k === "photo" || k === "imageurl" || k === "photourl") {
+        if (k === "mainimageurl" || k === "image" || k === "photo" || k === "imageurl") {
           raw = prod[key];
           break;
         }
       }
-
-      if (!raw || typeof raw !== "string") {
-        return "https://shreejufoods.github.io/Shreeju-Foods/logo.png";
-      }
-
-      // Markdown brackets [url](url) me se asli link nikalne ka logic
+      if (!raw || typeof raw !== "string") return "https://shreejufoods.github.io/Shreeju-Foods/logo.png";
+      
       let clean = raw.trim();
       const match = clean.match(/https?:\/\/[^\s)\]]+/);
-      if (match) {
-        clean = match[0];
-      }
+      if (match) clean = match[0];
 
       if (clean.includes('drive.google.com')) {
         const idMatch = clean.match(/\/d\/([a-zA-Z0-9_-]+)/) || clean.match(/id=([a-zA-Z0-9_-]+)/);
-        if (idMatch && idMatch[1]) {
-          return `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w600`;
-        }
+        if (idMatch && idMatch[1]) return `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w600`;
       }
-
       return clean.startsWith('http') ? clean : "https://shreejufoods.github.io/Shreeju-Foods/logo.png";
     }
-    
-    async function init() {
-      // Purana cache clear karein taaki hamesha bilkul fresh photo load ho
-      localStorage.clear();
 
+    async function init() {
+      localStorage.clear(); // Fresh session
       await Promise.all([
         fetchFastCSV(SHEET_URLS.settings).then(rows => {
           rows.forEach(r => { if(r.SettingKey) state.settings[r.SettingKey.trim()] = (r.Value || "").trim(); });
@@ -233,7 +400,7 @@ function resolveProductImage(prod) {
         }),
         fetchFastCSV(SHEET_URLS.products).then(rows => {
           state.products = rows.filter(r => (r.InStock || "").toUpperCase() === "YES");
-          renderProducts();
+          renderCatalog();
         }),
         fetchFastCSV(SHEET_URLS.reviews).then(rows => {
           state.reviews = rows.filter(r => (r.Approved || "").toUpperCase() === "YES");
@@ -244,7 +411,6 @@ function resolveProductImage(prod) {
 
     function fetchFastCSV(url) {
       return new Promise((resolve) => {
-        // Cache bypass timestamp
         const freshUrl = url + (url.includes('?') ? '&' : '?') + '_t=' + Date.now();
         Papa.parse(freshUrl, {
           download: true,
@@ -263,6 +429,37 @@ function resolveProductImage(prod) {
       if (s.ShowFlashBar === 'YES' && s.FlashOfferText) {
         document.getElementById('flashText').textContent = s.FlashOfferText;
         document.getElementById('flashBar').classList.remove('hidden');
+      }
+
+      // Address, Phone, Email
+      const addr = s.StoreAddress || "1306 Agra Road, Hathras, Uttar Pradesh - 204101";
+      const phone = s.WhatsAppNumber || "919690002789";
+      const email = s.ContactEmail || "care.shreejufoods@gmail.com";
+      const fssai = s.FSSAI_No || "22724106000000";
+      const gst = s.GST_No || "09AAAAA0000A1Z5";
+
+      document.getElementById('footerAddress').textContent = addr;
+      document.getElementById('modalAddress').textContent = addr;
+
+      document.getElementById('footerPhoneLink').textContent = "+91 " + phone.replace(/^91/, '');
+      document.getElementById('footerPhoneLink').href = `tel:+${phone}`;
+      document.getElementById('modalPhoneLink').textContent = "+91 " + phone.replace(/^91/, '');
+      document.getElementById('modalPhoneLink').href = `https://wa.me/${phone}`;
+
+      document.getElementById('footerEmailLink').textContent = email;
+      document.getElementById('footerEmailLink').href = `mailto:${email}`;
+      document.getElementById('modalEmailLink').textContent = email;
+      document.getElementById('modalEmailLink').href = `mailto:${email}`;
+
+      if(s.FSSAI_No) {
+        document.getElementById('badgeFssaiNo').textContent = "No: " + s.FSSAI_No;
+        document.getElementById('footerFssai').textContent = s.FSSAI_No;
+        document.getElementById('modalFssai').textContent = s.FSSAI_No;
+      }
+      if(s.GST_No) {
+        document.getElementById('badgeGstNo').textContent = "GSTIN: " + s.GST_No;
+        document.getElementById('footerGst').textContent = s.GST_No;
+        document.getElementById('modalGst').textContent = s.GST_No;
       }
     }
 
@@ -286,7 +483,7 @@ function resolveProductImage(prod) {
           ? "cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-[#2D5A27] text-white whitespace-nowrap shadow-sm"
           : "cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-gray-700 border border-gray-200 whitespace-nowrap shadow-sm";
       });
-      renderProducts();
+      renderCatalog();
     }
 
     function parseVariants(raw) {
@@ -301,68 +498,244 @@ function resolveProductImage(prod) {
       });
     }
 
-    function renderProducts() {
-      const grid = document.getElementById('productsGrid');
-      const query = (document.getElementById('searchInput').value || '').toLowerCase();
+    // Build Single Product Card HTML
+    function buildProductCardHTML(prod) {
+      const variants = parseVariants(prod.Variants);
+      const first = variants[0] || { size: 'Pack', price: 0, mrp: 0 };
+      const safeId = (prod.ProductID || 'P').replace(/[^a-zA-Z0-9]/g, '');
+      const finalImg = resolveProductImage(prod);
 
-      const list = state.products.filter(p => {
-        const matchCat = state.selectedCategory === 'ALL' || p.Category === state.selectedCategory;
-        const matchQuery = (p.ProductName || '').toLowerCase().includes(query) || (p.SearchKeywords || '').toLowerCase().includes(query);
-        return matchCat && matchQuery;
-      });
-
-      if(!list.length) {
-        grid.innerHTML = `<p class="col-span-full text-center text-gray-400 py-8 text-xs">Koi product nahi mila.</p>`;
-        return;
-      }
-
-      grid.innerHTML = list.map(prod => {
-        const variants = parseVariants(prod.Variants);
-        const first = variants[0] || { size: 'Pack', price: 0, mrp: 0 };
-        const safeId = (prod.ProductID || 'P').replace(/[^a-zA-Z0-9]/g, '');
-        const finalImg = resolveProductImage(prod);
-
-        return `
-          <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition">
-            <div class="relative bg-white flex items-center justify-center p-2 border-b">
-              <img src="${finalImg}" alt="${prod.ProductName}" onerror="this.src='https://shreejufoods.github.io/Shreeju-Foods/logo.png'" class="w-full h-36 object-contain" />
-              ${prod.Badge ? `<span class="absolute top-2 left-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm">${prod.Badge}</span>` : ''}
-              
-              <button onclick="shareProduct('${prod.ProductName}', '${first.price}')" title="Share with Friends" class="absolute top-2 right-2 bg-white/95 text-gray-700 hover:text-[#25D366] rounded-full h-7 w-7 flex items-center justify-center text-xs shadow-sm transition">
-                <i class="fa-solid fa-share-nodes"></i>
-              </button>
-            </div>
+      return `
+        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition">
+          <div class="relative bg-white flex items-center justify-center p-2 border-b cursor-pointer" onclick="openProductDetail('${prod.ProductID}')">
+            <img src="${finalImg}" alt="${prod.ProductName}" onerror="this.src='https://shreejufoods.github.io/Shreeju-Foods/logo.png'" class="w-full h-36 object-contain" />
+            ${prod.Badge ? `<span class="absolute top-2 left-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm">${prod.Badge}</span>` : ''}
             
-            <div class="p-3 flex-1 flex flex-col justify-between">
-              <div>
-                <h4 class="font-bold text-gray-900 text-xs md:text-sm line-clamp-2 leading-snug">${prod.ProductName}</h4>
-                <p class="text-[11px] text-gray-500 mt-1 line-clamp-1">${prod.ShortDescription || ''}</p>
+            <button onclick="event.stopPropagation(); shareProduct('${prod.ProductName}', '${first.price}')" title="Share with Friends" class="absolute top-2 right-2 bg-white/95 text-gray-700 hover:text-[#25D366] rounded-full h-7 w-7 flex items-center justify-center text-xs shadow-sm transition">
+              <i class="fa-solid fa-share-nodes"></i>
+            </button>
+          </div>
+          
+          <div class="p-3 flex-1 flex flex-col justify-between">
+            <div class="cursor-pointer" onclick="openProductDetail('${prod.ProductID}')">
+              <h4 class="font-bold text-gray-900 text-xs md:text-sm line-clamp-2 leading-snug hover:text-[#2D5A27] transition">${prod.ProductName}</h4>
+              <p class="text-[11px] text-gray-500 mt-1 line-clamp-1">${prod.ShortDescription || ''}</p>
+            </div>
+
+            <div class="mt-3">
+              <div class="flex items-center gap-1 overflow-x-auto hide-scrollbar mb-2">
+                ${variants.map((v, i) => `
+                  <button id="vbtn-${safeId}-${i}" onclick="setVariant('${safeId}', ${i}, ${v.price}, ${v.mrp}, '${v.size}')" class="vbtn-${safeId} text-[10px] px-2 py-0.5 rounded-md border ${i === 0 ? 'bg-[#2D5A27] text-white border-[#2D5A27]' : 'bg-gray-50 text-gray-600 border-gray-200'}">
+                    ${v.size}
+                  </button>
+                `).join('')}
               </div>
 
-              <div class="mt-3">
-                <div class="flex items-center gap-1 overflow-x-auto hide-scrollbar mb-2">
-                  ${variants.map((v, i) => `
-                    <button id="vbtn-${safeId}-${i}" onclick="setVariant('${safeId}', ${i}, ${v.price}, ${v.mrp}, '${v.size}')" class="vbtn-${safeId} text-[10px] px-2 py-0.5 rounded-md border ${i === 0 ? 'bg-[#2D5A27] text-white border-[#2D5A27]' : 'bg-gray-50 text-gray-600 border-gray-200'}">
-                      ${v.size}
-                    </button>
-                  `).join('')}
-                </div>
+              <div class="flex items-baseline gap-1.5">
+                <span id="price-${safeId}" class="font-bold text-sm text-[#2D5A27]">₹${first.price}</span>
+                <span id="mrp-${safeId}" class="text-[10px] text-gray-400 line-through">₹${first.mrp}</span>
+              </div>
 
-                <div class="flex items-baseline gap-1.5">
-                  <span id="price-${safeId}" class="font-bold text-sm text-[#2D5A27]">₹${first.price}</span>
-                  <span id="mrp-${safeId}" class="text-[10px] text-gray-400 line-through">₹${first.mrp}</span>
-                </div>
-
-                <button onclick="addToCart('${prod.ProductID}', '${safeId}')" class="w-full mt-2 bg-gray-900 hover:bg-[#2D5A27] text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition">
-                  <i class="fa-solid fa-plus text-[10px]"></i> Add to Cart
+              <div class="grid grid-cols-2 gap-1.5 mt-2">
+                <button onclick="openProductDetail('${prod.ProductID}')" class="border border-gray-300 hover:bg-gray-50 text-gray-700 py-1.5 rounded-lg text-xs font-semibold">
+                  Details
+                </button>
+                <button onclick="addToCart('${prod.ProductID}', '${safeId}')" class="bg-gray-900 hover:bg-[#2D5A27] text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition">
+                  <i class="fa-solid fa-plus text-[10px]"></i> Add
                 </button>
               </div>
             </div>
           </div>
-        `;
-      }).join('');
+        </div>
+      `;
     }
 
+    // Curated Home Layout (400 items nahi, clean 1-2 per category + Best Sellers)
+    function renderCatalog() {
+      const container = document.getElementById('productsGrid');
+      const query = (document.getElementById('searchInput').value || '').toLowerCase();
+
+      // Search Active
+      if (query) {
+        const filtered = state.products.filter(p => 
+          (p.ProductName || '').toLowerCase().includes(query) || 
+          (p.Category || '').toLowerCase().includes(query) ||
+          (p.SearchKeywords || '').toLowerCase().includes(query)
+        );
+        if (!filtered.length) {
+          container.innerHTML = `<p class="text-center text-gray-400 py-10 text-xs">Koi product nahi mila '${query}' ke liye.</p>`;
+          return;
+        }
+        container.innerHTML = `
+          <div>
+            <h3 class="font-bold text-gray-900 text-sm mb-3">Search Results (${filtered.length})</h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              ${filtered.map(p => buildProductCardHTML(p)).join('')}
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // Single Category Selected
+      if (state.selectedCategory !== 'ALL') {
+        const catProds = state.products.filter(p => p.Category === state.selectedCategory);
+        container.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-base md:text-lg font-bold text-gray-900">${state.selectedCategory}</h2>
+              <span class="text-xs text-gray-500">${catProds.length} Products</span>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              ${catProds.map(p => buildProductCardHTML(p)).join('')}
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // Curated Home View (All Items clicked)
+      let html = '';
+
+      // 1. Best Sellers / Featured Section (First 4-6 products with badge or priority)
+      const featured = state.products.filter(p => p.Badge && p.Badge.trim() !== "").slice(0, 4);
+      const topPicks = featured.length ? featured : state.products.slice(0, 4);
+
+      html += `
+        <section>
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h2 class="text-base font-bold text-gray-900 flex items-center gap-1.5">
+                <span>⭐</span> Handpicked Bestsellers
+              </h2>
+              <p class="text-[11px] text-gray-500">Most loved by families for daily purity</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            ${topPicks.map(p => buildProductCardHTML(p)).join('')}
+          </div>
+        </section>
+      `;
+
+      // 2. Category-Wise Sections (Show 2-3 items only per category + View All button)
+      state.categories.forEach(cat => {
+        const catProds = state.products.filter(p => p.Category === cat.CategoryName);
+        if (catProds.length) {
+          const teasers = catProds.slice(0, 3); // Max 3 on front page
+          html += `
+            <section class="border-t pt-6">
+              <div class="flex items-center justify-between mb-3">
+                <div>
+                  <h3 class="text-sm md:text-base font-bold text-gray-900">${cat.CategoryName}</h3>
+                  <p class="text-[11px] text-gray-500">${cat.Tagline || 'Authentic & Unadulterated'}</p>
+                </div>
+                <button onclick="selectCategory('${cat.CategoryName}')" class="text-xs font-bold text-[#2D5A27] hover:underline flex items-center gap-1">
+                  View All (${catProds.length}) →
+                </button>
+              </div>
+              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                ${teasers.map(p => buildProductCardHTML(p)).join('')}
+              </div>
+            </section>
+          `;
+        }
+      });
+
+      container.innerHTML = html;
+    }
+
+    function handleSearch() {
+      renderCatalog();
+    }
+
+    // --- Product Detail Modal Logic ---
+    let currentDetailProduct = null;
+    let currentDetailVariant = null;
+
+    function openProductDetail(productId) {
+      const prod = state.products.find(p => p.ProductID === productId);
+      if(!prod) return;
+
+      currentDetailProduct = prod;
+      const variants = parseVariants(prod.Variants);
+      currentDetailVariant = variants[0] || { size: 'Pack', price: 0, mrp: 0 };
+
+      const img = resolveProductImage(prod);
+      document.getElementById('detailImg').src = img;
+      document.getElementById('detailTitle').textContent = prod.ProductName;
+      document.getElementById('detailCategory').textContent = prod.Category || '100% Natural & Chemical Free';
+      
+      const badgeEl = document.getElementById('detailBadge');
+      if (prod.Badge) {
+        badgeEl.textContent = prod.Badge;
+        badgeEl.classList.remove('hidden');
+      } else {
+        badgeEl.classList.add('hidden');
+      }
+
+      document.getElementById('detailDesc').textContent = prod.ShortDescription || "Made with traditional authentic methods to preserve natural aroma, taste, and nutrition. 100% chemical free and unadulterated.";
+      
+      // Ingredients
+      const ingBox = document.getElementById('detailIngredientsBox');
+      if (prod.Ingredients && prod.Ingredients.trim() !== "") {
+        document.getElementById('detailIngredients').textContent = prod.Ingredients;
+        ingBox.classList.remove('hidden');
+      } else {
+        ingBox.classList.add('hidden');
+      }
+
+      // Variant Buttons
+      const vContainer = document.getElementById('detailVariantsList');
+      vContainer.innerHTML = variants.map((v, i) => `
+        <button onclick="setDetailVariant(${i}, ${v.price}, ${v.mrp}, '${v.size}')" class="detail-vbtn px-3 py-1.5 rounded-lg border text-xs font-semibold ${i === 0 ? 'bg-[#2D5A27] text-white border-[#2D5A27]' : 'bg-gray-50 text-gray-700 border-gray-200'}">
+          ${v.size}
+        </button>
+      `).join('');
+
+      document.getElementById('detailPrice').textContent = `₹${currentDetailVariant.price}`;
+      document.getElementById('detailMrp').textContent = `₹${currentDetailVariant.mrp}`;
+
+      // Share button
+      document.getElementById('detailShareBtn').onclick = () => shareProduct(prod.ProductName, currentDetailVariant.price);
+
+      // Add to cart from modal
+      document.getElementById('detailAddCartBtn').onclick = () => {
+        const cartKey = `${prod.ProductID}|${currentDetailVariant.size}`;
+        if (state.cart[cartKey]) {
+          state.cart[cartKey].qty += 1;
+        } else {
+          state.cart[cartKey] = {
+            productId: prod.ProductID,
+            name: prod.ProductName,
+            size: currentDetailVariant.size,
+            price: currentDetailVariant.price,
+            qty: 1
+          };
+        }
+        updateCartDisplay();
+        closeProductDetailModal();
+        toggleCart();
+      };
+
+      document.getElementById('productDetailModal').classList.remove('hidden');
+    }
+
+    function setDetailVariant(index, price, mrp, size) {
+      currentDetailVariant = { size, price, mrp };
+      document.getElementById('detailPrice').textContent = `₹${price}`;
+      document.getElementById('detailMrp').textContent = `₹${mrp}`;
+      document.querySelectorAll('.detail-vbtn').forEach((btn, i) => {
+        btn.className = i === index 
+          ? "detail-vbtn px-3 py-1.5 rounded-lg border text-xs font-semibold bg-[#2D5A27] text-white border-[#2D5A27]"
+          : "detail-vbtn px-3 py-1.5 rounded-lg border text-xs font-semibold bg-gray-50 text-gray-700 border-gray-200";
+      });
+    }
+
+    function closeProductDetailModal() {
+      document.getElementById('productDetailModal').classList.add('hidden');
+    }
+
+    // --- Inline Product Card Variant Selection ---
     const selectedVariantState = {};
     function setVariant(safeId, index, price, mrp, size) {
       selectedVariantState[safeId] = { index, price, mrp, size };
@@ -477,16 +850,16 @@ function resolveProductImage(prod) {
       }
     }
 
+    // Modals & Extras
+    function toggleContactModal() {
+      document.getElementById('contactModal').classList.toggle('hidden');
+    }
+
     function shareStore() {
       const storeUrl = window.location.href;
       const shareMsg = `Namaste! Shreeju Foods se 100% pure, natural and chemical-free spices, bilona ghee aur dry fruits mangwane ke liye yahan visit karein: ${storeUrl}`;
-      
       if (navigator.share) {
-        navigator.share({
-          title: 'Shreeju Foods',
-          text: shareMsg,
-          url: storeUrl
-        }).catch(() => {});
+        navigator.share({ title: 'Shreeju Foods', text: shareMsg, url: storeUrl }).catch(() => {});
       } else {
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareMsg)}`, '_blank');
       }
@@ -495,13 +868,8 @@ function resolveProductImage(prod) {
     function shareProduct(name, price) {
       const storeUrl = window.location.href;
       const msg = `Dekhiye Shreeju Foods ka 100% natural and chemical-free ${name} sirf ₹${price} me! Order karein: ${storeUrl}`;
-      
       if (navigator.share) {
-        navigator.share({
-          title: name,
-          text: msg,
-          url: storeUrl
-        }).catch(() => {});
+        navigator.share({ title: name, text: msg, url: storeUrl }).catch(() => {});
       } else {
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
       }
@@ -578,10 +946,6 @@ function resolveProductImage(prod) {
 
     function toggleCart() {
       document.getElementById('cartModal').classList.toggle('hidden');
-    }
-
-    function filterProducts() {
-      renderProducts();
     }
 
     function processWhatsAppOrder() {
