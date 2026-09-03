@@ -244,9 +244,11 @@
       ]);
     }
 
-    function fetchFastCSV(url) {
+function fetchFastCSV(url) {
       return new Promise((resolve) => {
-        Papa.parse(url, {
+        // Fresh data lane ke liye timestamp
+        const freshUrl = url + '&_t=' + new Date().getTime();
+        Papa.parse(freshUrl, {
           download: true,
           header: true,
           skipEmptyLines: true,
