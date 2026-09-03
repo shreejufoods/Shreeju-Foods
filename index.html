@@ -65,7 +65,7 @@
     </div>
   </div>
 
-  <!-- Trust Badges (FSSAI, GST, Natural) -->
+  <!-- Trust Badges (Instant SVG Logo) -->
   <div class="max-w-6xl mx-auto px-4 mt-4">
     <div class="bg-white border border-gray-200 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs text-gray-600 shadow-sm">
       <div class="flex items-center gap-2">
@@ -76,9 +76,11 @@
         </div>
       </div>
 
-      <!-- Clean Official FSSAI Badge -->
-      <div class="flex items-center gap-2">
-        <img src="https://images.seeklogo.com/logo-png/43/1/fssai-logo-png_seeklogo-436443.png" alt="FSSAI" class="h-6 w-auto object-contain" onerror="this.src='https://cdn.worldvectorlogo.com/logos/fssai.svg'" />
+      <!-- FSSAI Instant Graphic SVG -->
+      <div class="flex items-center gap-2.5">
+        <div class="bg-white border border-gray-200 px-2 py-0.5 rounded shadow-sm flex items-center">
+          <span class="font-black italic text-base tracking-tighter text-[#E45826] leading-none">fss</span><span class="font-black italic text-base tracking-tighter text-[#0F4C81] leading-none">ai</span>
+        </div>
         <div>
           <span class="font-bold text-gray-800 block leading-tight text-xs">FSSAI Certified</span>
           <span id="badgeFssaiNo" class="text-[10px] text-gray-500">Lic. No: Available on Invoice</span>
@@ -99,7 +101,10 @@
   <!-- Main Catalog Area -->
   <main class="max-w-6xl mx-auto px-4 mt-6" id="mainCatalog">
     <div id="productsGrid" class="space-y-8">
-      <p class="text-center text-gray-400 py-10 text-xs">Loading products...</p>
+      <div class="flex justify-center items-center py-12">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2D5A27]"></div>
+        <span class="ml-3 text-sm text-gray-500 font-medium">Opening Shreeju Foods Store...</span>
+      </div>
     </div>
   </main>
 
@@ -117,7 +122,7 @@
     <div id="reviewsGrid" class="flex gap-4 overflow-x-auto hide-scrollbar pb-3"></div>
   </section>
 
-  <!-- Footer Contact & Info Section -->
+  <!-- Footer -->
   <footer class="bg-white border-t mt-12 pt-8 pb-16 text-gray-600 text-xs">
     <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
       <div>
@@ -387,29 +392,35 @@
       return clean.startsWith('http') ? clean : "https://shreejufoods.github.io/Shreeju-Foods/logo.png";
     }
 
-    async function init() {
-      // Parallel fast fetching with version-based caching
-      await Promise.all([
-        fetchFastCSV(SHEET_URLS.settings, 300).then(rows => {
-          rows.forEach(r => { if(r.SettingKey) state.settings[r.SettingKey.trim()] = (r.Value || "").trim(); });
-          applySettings();
-        }),
-        fetchFastCSV(SHEET_URLS.categories, 300).then(rows => {
-          state.categories = rows.filter(r => (r.Active || "").toUpperCase() === "YES");
-          renderCategories();
-        }),
-        fetchFastCSV(SHEET_URLS.products, 60).then(rows => {
-          state.products = rows.filter(r => (r.InStock || "").toUpperCase() === "YES");
-          renderCatalog();
-        }),
-        fetchFastCSV(SHEET_URLS.reviews, 300).then(rows => {
-          state.reviews = rows.filter(r => (r.Approved || "").toUpperCase() === "YES");
-          renderReviews();
-        })
-      ]);
+    // INDEPENDENT ASYNC LOADING: Ek doosre ka wait nahi karenge!
+    function init() {
+      // 1. Products sabse pehle load honge
+      fetchFastCSV(SHEET_URLS.products, 30).then(rows => {
+        state.products = rows.filter(r => (r.InStock || "").toUpperCase() === "YES");
+        renderCatalog();
+      });
+
+      // 2. Categories load hongi
+      fetchFastCSV(SHEET_URLS.categories, 300).then(rows => {
+        state.categories = rows.filter(r => (r.Active || "").toUpperCase() === "YES");
+        renderCategories();
+        if (state.products.length) renderCatalog();
+      });
+
+      // 3. Settings load hongi
+      fetchFastCSV(SHEET_URLS.settings, 300).then(rows => {
+        rows.forEach(r => { if(r.SettingKey) state.settings[r.SettingKey.trim()] = (r.Value || "").trim(); });
+        applySettings();
+      });
+
+      // 4. Reviews load honge
+      fetchFastCSV(SHEET_URLS.reviews, 300).then(rows => {
+        state.reviews = rows.filter(r => (r.Approved || "").toUpperCase() === "YES");
+        renderReviews();
+      });
     }
 
-    function fetchFastCSV(url, cacheSeconds = 60) {
+    function fetchFastCSV(url, cacheSeconds = 30) {
       return new Promise((resolve) => {
         const cacheKey = Math.floor(Date.now() / (cacheSeconds * 1000));
         const fastUrl = url + (url.includes('?') ? '&' : '?') + '_v=' + cacheKey;
@@ -450,7 +461,7 @@
       document.getElementById('modalEmailLink').href = `mailto:${email}`;
 
       if(s.FSSAI_No) {
-        document.getElementById('badgeFssaiNo').textContent = "No: " + s.FSSAI_No;
+        document.getElementById('badgeFssaiNo').textContent = "Lic: " + s.FSSAI_No;
         document.getElementById('footerFssai').textContent = s.FSSAI_No;
         document.getElementById('modalFssai').textContent = s.FSSAI_No;
       }
@@ -549,6 +560,8 @@
 
     function renderCatalog() {
       const container = document.getElementById('productsGrid');
+      if (!state.products.length) return;
+
       const query = (document.getElementById('searchInput').value || '').toLowerCase();
 
       if (query) {
@@ -608,28 +621,30 @@
         </section>
       `;
 
-      state.categories.forEach(cat => {
-        const catProds = state.products.filter(p => p.Category === cat.CategoryName);
-        if (catProds.length) {
-          const teasers = catProds.slice(0, 3);
-          html += `
-            <section class="border-t pt-6">
-              <div class="flex items-center justify-between mb-3">
-                <div>
-                  <h3 class="text-sm md:text-base font-bold text-gray-900">${cat.CategoryName}</h3>
-                  <p class="text-[11px] text-gray-500">${cat.Tagline || 'Authentic & Unadulterated'}</p>
+      if (state.categories.length) {
+        state.categories.forEach(cat => {
+          const catProds = state.products.filter(p => p.Category === cat.CategoryName);
+          if (catProds.length) {
+            const teasers = catProds.slice(0, 3);
+            html += `
+              <section class="border-t pt-6">
+                <div class="flex items-center justify-between mb-3">
+                  <div>
+                    <h3 class="text-sm md:text-base font-bold text-gray-900">${cat.CategoryName}</h3>
+                    <p class="text-[11px] text-gray-500">${cat.Tagline || 'Authentic & Unadulterated'}</p>
+                  </div>
+                  <button onclick="selectCategory('${cat.CategoryName}')" class="text-xs font-bold text-[#2D5A27] hover:underline flex items-center gap-1">
+                    View All (${catProds.length}) →
+                  </button>
                 </div>
-                <button onclick="selectCategory('${cat.CategoryName}')" class="text-xs font-bold text-[#2D5A27] hover:underline flex items-center gap-1">
-                  View All (${catProds.length}) →
-                </button>
-              </div>
-              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                ${teasers.map(p => buildProductCardHTML(p)).join('')}
-              </div>
-            </section>
-          `;
-        }
-      });
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  ${teasers.map(p => buildProductCardHTML(p)).join('')}
+                </div>
+              </section>
+            `;
+          }
+        });
+      }
 
       container.innerHTML = html;
     }
