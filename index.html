@@ -207,27 +207,26 @@
     };
 
     async function init() {
-      await fetchCSV(SHEET_URLS.settings, (rows) => {
-        rows.forEach(r => { if(r.SettingKey) state.settings[r.SettingKey.trim()] = (r.Value || "").trim(); });
-        applySettings();
-      });
-
-      await fetchCSV(SHEET_URLS.categories, (rows) => {
-        state.categories = rows.filter(r => (r.Active || "").toUpperCase() === "YES");
-        renderCategories();
-      });
-
-      await fetchCSV(SHEET_URLS.products, (rows) => {
-        state.products = rows.filter(r => (r.InStock || "").toUpperCase() === "YES");
-        renderProducts();
-      });
-
-      await fetchCSV(SHEET_URLS.reviews, (rows) => {
-        state.reviews = rows.filter(r => (r.Approved || "").toUpperCase() === "YES");
-        renderReviews();
-      });
+      await Promise.all([
+        fetchCSV(SHEET_URLS.settings, (rows) => {
+          rows.forEach(r => { if(r.SettingKey) state.settings[r.SettingKey.trim()] = (r.Value || "").trim(); });
+          applySettings();
+        }),
+        fetchCSV(SHEET_URLS.categories, (rows) => {
+          state.categories = rows.filter(r => (r.Active || "").toUpperCase() === "YES");
+          renderCategories();
+        }),
+        fetchCSV(SHEET_URLS.products, (rows) => {
+          state.products = rows.filter(r => (r.InStock || "").toUpperCase() === "YES");
+          renderProducts();
+        }),
+        fetchCSV(SHEET_URLS.reviews, (rows) => {
+          state.reviews = rows.filter(r => (r.Approved || "").toUpperCase() === "YES");
+          renderReviews();
+        })
+      ]);
     }
-
+    
     function fetchCSV(url, callback) {
       return new Promise((resolve) => {
         Papa.parse(url, {
@@ -575,7 +574,8 @@
         star.style.color = (i <= val) ? '#f59e0b' : '#d1d5db';
       }
     }
-    function submitCustomerReview() {
+    
+function submitCustomerReview() {
       const name = document.getElementById('revName').value.trim();
       const city = document.getElementById('revCity').value.trim();
       const product = document.getElementById('revProduct').value.trim();
@@ -614,12 +614,9 @@
         `📸 *(Maine photo niche attach kar di hai, kripya website par feature karein)*`;
 
       toggleReviewModal();
-      alert("Aapka review record ho gaya hai! WhatsApp par photo attach karke bhej dijiye.");
       window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
     }
-    toggleReviewModal();
-      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
-    }
+    
     window.onload = init;
   </script>
 </body>
