@@ -184,23 +184,44 @@
       selectedRating: 5
     };
 
-    // Smart Image URL Resolver
-    function fixImageUrl(url) {
-      if (!url || typeof url !== 'string') return '';
-      const cleanUrl = url.trim();
-      if (!cleanUrl.startsWith('http')) return '';
+    // Auto-detects and fixes any image link from Sheet
+    function resolveProductImage(prod) {
+      if (!prod) return "https://shreejufoods.github.io/Shreeju-Foods/logo.png";
       
-      // Google Drive Direct Thumbnail Conversion
-      if (cleanUrl.includes('drive.google.com')) {
-        const idMatch = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || cleanUrl.match(/id=([a-zA-Z0-9_-]+)/);
+      // Auto-detect any column that might have the image
+      let raw = "";
+      for (const key of Object.keys(prod)) {
+        const k = key.trim().toLowerCase();
+        if (k === "mainimageurl" || k === "image" || k === "photo" || k === "imageurl" || k === "photourl") {
+          raw = prod[key];
+          break;
+        }
+      }
+
+      if (!raw || typeof raw !== "string") {
+        return "https://shreejufoods.github.io/Shreeju-Foods/logo.png";
+      }
+
+      let clean = raw.trim().replace(/^["']|["']$/g, ''); // quotes hataye
+
+      if (clean.includes('drive.google.com')) {
+        const idMatch = clean.match(/\/d\/([a-zA-Z0-9_-]+)/) || clean.match(/id=([a-zA-Z0-9_-]+)/);
         if (idMatch && idMatch[1]) {
           return `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w600`;
         }
       }
-      return cleanUrl;
+
+      if (clean.startsWith('http')) {
+        return clean;
+      }
+
+      return "https://shreejufoods.github.io/Shreeju-Foods/logo.png";
     }
 
     async function init() {
+      // Purana cache clear karein taaki hamesha bilkul fresh photo load ho
+      localStorage.clear();
+
       await Promise.all([
         fetchFastCSV(SHEET_URLS.settings).then(rows => {
           rows.forEach(r => { if(r.SettingKey) state.settings[r.SettingKey.trim()] = (r.Value || "").trim(); });
@@ -223,13 +244,12 @@
 
     function fetchFastCSV(url) {
       return new Promise((resolve) => {
-        // Cache-busting timestamp to always fetch fresh sheet updates
-        const freshUrl = url + '&_t=' + Date.now();
+        // Cache bypass timestamp
+        const freshUrl = url + (url.includes('?') ? '&' : '?') + '_t=' + Date.now();
         Papa.parse(freshUrl, {
           download: true,
           header: true,
           skipEmptyLines: true,
-          worker: true,
           complete: (results) => resolve(results.data || []),
           error: () => resolve([])
         });
@@ -300,16 +320,12 @@
         const variants = parseVariants(prod.Variants);
         const first = variants[0] || { size: 'Pack', price: 0, mrp: 0 };
         const safeId = (prod.ProductID || 'P').replace(/[^a-zA-Z0-9]/g, '');
-        
-        // Accurate Image Resolution
-        const imgKey = Object.keys(prod).find(k => k.trim().toLowerCase() === 'mainimageurl') || 'MainImageURL';
-        const rawImg = prod[imgKey];
-        const validImg = fixImageUrl(rawImg) || 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400';
+        const finalImg = resolveProductImage(prod);
 
         return `
           <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition">
-            <div class="relative bg-gray-50">
-              <img src="${validImg}" alt="${prod.ProductName}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400';" class="w-full h-36 object-cover" />
+            <div class="relative bg-white flex items-center justify-center p-2 border-b">
+              <img src="${finalImg}" alt="${prod.ProductName}" onerror="this.src='https://shreejufoods.github.io/Shreeju-Foods/logo.png'" class="w-full h-36 object-contain" />
               ${prod.Badge ? `<span class="absolute top-2 left-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm">${prod.Badge}</span>` : ''}
               
               <button onclick="shareProduct('${prod.ProductName}', '${first.price}')" title="Share with Friends" class="absolute top-2 right-2 bg-white/95 text-gray-700 hover:text-[#25D366] rounded-full h-7 w-7 flex items-center justify-center text-xs shadow-sm transition">
