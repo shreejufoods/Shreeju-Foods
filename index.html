@@ -587,6 +587,22 @@
         return;
       }
 
+      // Sheet me auto-save
+      const payload = new URLSearchParams();
+      payload.append("action", "review");
+      payload.append("name", name);
+      payload.append("city", city);
+      payload.append("product", product);
+      payload.append("rating", selectedRatingVal);
+      payload.append("comment", comment);
+
+      fetch(SHEET_URLS.orderScript, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: payload.toString()
+      });
+
       const stars = '⭐'.repeat(selectedRatingVal);
       const msg = 
         `*CUSTOMER REVIEW & DISH SNAP*\n\n` +
@@ -598,6 +614,10 @@
         `📸 *(Maine photo niche attach kar di hai, kripya website par feature karein)*`;
 
       toggleReviewModal();
+      alert("Aapka review record ho gaya hai! WhatsApp par photo attach karke bhej dijiye.");
+      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+    toggleReviewModal();
       window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
     }
     window.onload = init;
