@@ -129,7 +129,7 @@
 
       <!-- Fixed Drawer Footer -->
       <div class="p-3 border-t bg-white shrink-0 shadow-lg">
-        <button onclick="processWhatsAppOrder()" class="w-full bg-[#25D366] hover:bg-[#1EBE5D] text-white py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md transition active:scale-[0.99]">
+        <button id="orderSubmitBtn" onclick="processWhatsAppOrder()" class="w-full bg-[#25D366] hover:bg-[#1EBE5D] text-white py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md transition active:scale-[0.99]">
           <i class="fa-brands fa-whatsapp text-xl"></i> Place Order on WhatsApp
         </button>
       </div>
@@ -142,7 +142,8 @@
       products: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR3ZRNdbA16ZTSyBTtbi-TxyS7XkoM6YOOQtF9j62fWsZWM3UMFz2j_hWFlx-PgTrrAlozJYx9c5YMt/pub?gid=1853255029&single=true&output=csv",
       settings: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR3ZRNdbA16ZTSyBTtbi-TxyS7XkoM6YOOQtF9j62fWsZWM3UMFz2j_hWFlx-PgTrrAlozJYx9c5YMt/pub?gid=885526698&single=true&output=csv",
       categories: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR3ZRNdbA16ZTSyBTtbi-TxyS7XkoM6YOOQtF9j62fWsZWM3UMFz2j_hWFlx-PgTrrAlozJYx9c5YMt/pub?gid=1839177821&single=true&output=csv",
-      reviews: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR3ZRNdbA16ZTSyBTtbi-TxyS7XkoM6YOOQtF9j62fWsZWM3UMFz2j_hWFlx-PgTrrAlozJYx9c5YMt/pub?gid=22594838&single=true&output=csv"
+      reviews: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR3ZRNdbA16ZTSyBTtbi-TxyS7XkoM6YOOQtF9j62fWsZWM3UMFz2j_hWFlx-PgTrrAlozJYx9c5YMt/pub?gid=22594838&single=true&output=csv",
+      orderScript: "https://script.google.com/macros/s/AKfycbx7knKf2xE6L0IhGd57IHAUj1mnePqiFB75qkqkRj4VFH4w4FESVswrrb2b6DVYNgav/exec"
     };
 
     let state = {
@@ -436,7 +437,7 @@
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
-    function processWhatsAppOrder() {
+    async function processWhatsAppOrder() {
       const name = document.getElementById('custName').value.trim();
       let phone = document.getElementById('custPhone').value.trim();
       const address = document.getElementById('custAddress').value.trim();
@@ -457,9 +458,11 @@
       phone = phone.replace(/^0+/, '');
 
       let orderSummary = "";
+      let itemsArray = [];
       keys.forEach((k, idx) => {
         const it = state.cart[k];
         orderSummary += `${idx + 1}. ${it.name} [${it.size}] x ${it.qty} = Rs. ${it.price * it.qty}\n`;
+        itemsArray.push(`${it.name} (${it.size}) x${it.qty}`);
       });
 
       const subtotal = document.getElementById('summarySubtotal').textContent;
@@ -468,6 +471,27 @@
       const grandTotal = document.getElementById('summaryGrandTotal').textContent;
       const upi = state.settings.UPI_ID || '9690002789@upi';
       const waNumber = state.settings.WhatsAppNumber || '919690002789';
+
+      // Background silent write to Google Sheets (Orders tab)
+      try {
+        fetch(SHEET_URLS.orderScript, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: name,
+            phone: phone,
+            address: address,
+            city: city,
+            pincode: pincode,
+            items: itemsArray.join(", "),
+            weight: weight,
+            grandTotal: grandTotal
+          })
+        });
+      } catch(e) {
+        console.log("Sheet record skipped");
+      }
 
       const fullMessage = 
         `*NEW ORDER - SHREEJU FOODS*\n\n` +
