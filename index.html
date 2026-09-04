@@ -15,13 +15,13 @@
 <body class="bg-[#F8F9FA] text-gray-800 font-sans pb-24">
 
   <!-- Top Announcement Bar -->
-  <div id="flashBar" class="bg-[#1E3A2B] text-[#E8F5E9] text-xs md:text-sm py-2 px-4 text-center font-medium hidden">
+  <div id="flashBar" class="bg-[#1E3A2B] text-[#E8F5E9] text-xs md:text-sm py-2 px-4 text-center font-medium">
     <span id="flashText">100% Natural & Chemical Free | Free Shipping on orders above ₹499!</span>
   </div>
 
   <!-- Header -->
   <header class="bg-white border-b sticky top-0 z-40 shadow-sm">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-2 md:gap-3">
       <div class="flex items-center gap-3 cursor-pointer" onclick="selectCategory('ALL')">
         <img id="storeLogo" src="https://shreejufoods.github.io/Shreeju-Foods/logo.png" alt="Shreeju Foods" class="h-11 w-auto object-contain rounded-lg" onerror="this.src='https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=100'" />
         <div>
@@ -31,14 +31,20 @@
       </div>
       
       <div class="flex items-center gap-2">
+        <!-- Self-Service Order Tracking Button -->
+        <button onclick="toggleTrackingModal()" class="border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-[#1E3A2B] px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-bold transition shadow-sm">
+          <i class="fa-solid fa-truck-fast text-emerald-700"></i>
+          <span>Track</span>
+        </button>
+
         <button onclick="toggleContactModal()" class="border border-gray-300 hover:border-gray-400 text-gray-700 px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-semibold transition shadow-sm bg-white">
           <i class="fa-solid fa-headset text-green-700"></i>
           <span class="hidden sm:inline">Contact</span>
         </button>
 
-        <button onclick="shareStore()" class="border border-green-700 text-green-800 hover:bg-green-50 px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-semibold transition shadow-sm">
+        <button onclick="shareStore()" class="border border-green-700 text-green-800 hover:bg-green-50 px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-semibold transition shadow-sm hidden md:flex">
           <i class="fa-solid fa-share-nodes text-green-700"></i>
-          <span class="hidden md:inline">Recommend</span>
+          <span>Recommend</span>
         </button>
 
         <button onclick="toggleCart()" class="relative bg-[#2D5A27] text-white px-3.5 py-1.5 rounded-xl flex items-center gap-2 text-xs font-medium hover:bg-[#1E3A2B] transition shadow-sm">
@@ -106,18 +112,38 @@
     </div>
   </main>
 
-  <!-- Customer Reviews Section -->
+  <!-- Comprehensive Customer Rating & Reviews Section -->
   <section class="max-w-6xl mx-auto px-4 mt-12 mb-8">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-      <div>
-        <h2 class="text-base md:text-lg font-bold text-gray-900">🌟 Real Customer Reviews</h2>
-        <p class="text-xs text-gray-500">Shared by verified buyers</p>
+    <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4">
+        <div>
+          <h2 class="text-base md:text-lg font-bold text-gray-900">🌟 Customer Ratings & Experiences</h2>
+          <p class="text-xs text-gray-500">Real feedback from verified buyers</p>
+        </div>
+        <button onclick="toggleReviewModal()" class="inline-flex items-center justify-center gap-1.5 bg-[#1E3A2B] hover:bg-[#2D5A27] text-white px-4 py-2 rounded-xl text-xs font-bold shadow transition">
+          <i class="fa-solid fa-pen-to-square"></i> Rate & Review
+        </button>
       </div>
-      <button onclick="toggleReviewModal()" class="inline-flex items-center justify-center gap-1.5 bg-[#1E3A2B] hover:bg-[#2D5A27] text-white px-3.5 py-1.5 rounded-xl text-xs font-bold shadow transition">
-        <i class="fa-solid fa-camera"></i> Write Review
-      </button>
+
+      <!-- Rating Breakdown & Percentage Bars -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+        <div class="text-center md:border-r pr-4">
+          <div id="avgRatingNumber" class="text-4xl font-extrabold text-gray-900 leading-none">5.0</div>
+          <div id="avgRatingStars" class="text-amber-400 text-lg my-1">★★★★★</div>
+          <p id="totalReviewsCount" class="text-xs text-gray-500">Based on verified reviews</p>
+        </div>
+
+        <div class="md:col-span-2 space-y-2 text-xs" id="ratingBarsContainer">
+          <!-- Dynamically populated star % bars -->
+        </div>
+      </div>
+
+      <!-- Recent Reviews Container -->
+      <div>
+        <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Recent Verified Feedback</h3>
+        <div id="reviewsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
+      </div>
     </div>
-    <div id="reviewsGrid" class="flex gap-4 overflow-x-auto hide-scrollbar pb-3"></div>
   </section>
 
   <!-- Footer -->
@@ -169,7 +195,36 @@
     </div>
   </footer>
 
-  <!-- Product Detail Modal -->
+  <!-- Self-Service Package Tracking Modal -->
+  <div id="trackingModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+      <div class="p-4 border-b bg-gray-50 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">📦</span>
+          <div>
+            <h3 class="font-bold text-gray-900 text-sm">Track Your Shipment</h3>
+            <p class="text-[11px] text-gray-500">Check live parcel status</p>
+          </div>
+        </div>
+        <button onclick="toggleTrackingModal()" class="text-gray-400 hover:text-gray-800 text-2xl leading-none">&times;</button>
+      </div>
+      <div class="p-4 space-y-3 text-xs">
+        <div>
+          <label class="block text-gray-700 font-bold mb-1">Enter WhatsApp Mobile Number:</label>
+          <div class="flex gap-2">
+            <input type="tel" id="trackPhoneInput" placeholder="Jaise: 9876543210" class="flex-1 p-2.5 rounded-xl border border-gray-300 text-xs outline-none focus:border-green-600" />
+            <button onclick="checkOrderStatus()" class="bg-[#1E3A2B] hover:bg-[#2D5A27] text-white px-4 rounded-xl font-bold text-xs shadow">Search</button>
+          </div>
+        </div>
+
+        <div id="trackingResult" class="hidden border rounded-xl p-3 bg-gray-50 space-y-2">
+          <!-- Populated by script -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Detail Modal (With Specific Product Reviews) -->
   <div id="productDetailModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
     <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
       <div class="p-3 border-b flex items-center justify-between bg-gray-50">
@@ -207,6 +262,15 @@
           <span id="detailPrice" class="text-xl font-extrabold text-[#2D5A27]">₹0</span>
           <span id="detailMrp" class="text-xs text-gray-400 line-through">₹0</span>
         </div>
+
+        <!-- Specific Customer Reviews for this Product -->
+        <div class="border-t pt-3 space-y-2">
+          <h4 class="font-bold text-gray-800 text-xs flex items-center justify-between">
+            <span>Customer Feedback on this item</span>
+            <span id="detailReviewCount" class="text-[10px] text-gray-500 font-normal"></span>
+          </h4>
+          <div id="detailProductReviewsList" class="space-y-2 max-h-40 overflow-y-auto"></div>
+        </div>
       </div>
       <div class="p-3 border-t bg-gray-50 flex gap-2">
         <button id="detailShareBtn" class="border border-gray-300 text-gray-700 px-3 py-2.5 rounded-xl text-xs font-bold hover:bg-gray-100 flex items-center justify-center gap-1.5 transition">
@@ -242,16 +306,6 @@
           <p class="font-bold text-gray-900 mb-0.5">✉️ Email Support:</p>
           <a id="modalEmailLink" href="mailto:care.shreejufoods@gmail.com" class="text-green-700 font-semibold hover:underline block text-[11px]">care.shreejufoods@gmail.com</a>
         </div>
-        <div class="border rounded-xl p-3 bg-blue-50 border-blue-100 flex items-center justify-between">
-          <div>
-            <span class="font-bold text-blue-950 block text-[11px]">FSSAI Registered</span>
-            <span id="modalFssai" class="text-[10px] text-blue-800">Verification on Invoice</span>
-          </div>
-          <div class="text-right">
-            <span class="font-bold text-emerald-950 block text-[11px]">GST Compliance</span>
-            <span id="modalGst" class="text-[10px] text-emerald-800">Verified Firm</span>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -261,8 +315,8 @@
     <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
       <div class="p-4 border-b bg-gray-50 flex items-center justify-between">
         <div>
-          <h3 class="font-bold text-gray-900 text-sm">Write a Review</h3>
-          <p class="text-[11px] text-gray-500">Apna anubhav share karein</p>
+          <h3 class="font-bold text-gray-900 text-sm">Rate & Share Feedback</h3>
+          <p class="text-[11px] text-gray-500">Share your pure experience</p>
         </div>
         <button onclick="toggleReviewModal()" class="text-gray-400 hover:text-gray-800 text-2xl leading-none">&times;</button>
       </div>
@@ -287,12 +341,12 @@
           <input type="text" id="revCity" placeholder="Jaise: Hathras ya Delhi" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none focus:border-green-600" />
         </div>
         <div>
-          <label class="block text-gray-700 font-medium mb-1">Product *</label>
-          <input type="text" id="revProduct" placeholder="Jaise: Bilona Ghee / Haldi" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none focus:border-green-600" />
+          <label class="block text-gray-700 font-medium mb-1">Product Purchased *</label>
+          <input type="text" id="revProduct" placeholder="Jaise: Pure Haldi Powder / Bilona Ghee" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none focus:border-green-600" />
         </div>
         <div>
-          <label class="block text-gray-700 font-medium mb-1">Review *</label>
-          <textarea id="revComment" rows="2" placeholder="Quality kaisi lagi?" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none focus:border-green-600"></textarea>
+          <label class="block text-gray-700 font-medium mb-1">Review & Experience *</label>
+          <textarea id="revComment" rows="2" placeholder="Quality, taste aur packaging kaisi lagi?" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs outline-none focus:border-green-600"></textarea>
         </div>
         <button onclick="submitCustomerReview()" class="w-full bg-[#25D366] hover:bg-[#1EBE5D] text-white py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow transition">
           <i class="fa-brands fa-whatsapp text-base"></i> Submit Review on WhatsApp
@@ -310,7 +364,7 @@
       </div>
       <div class="flex-1 overflow-y-auto p-4 space-y-4">
         
-        <!-- Past Order Section (Repeat Order) -->
+        <!-- Reorder Previous Order -->
         <div id="pastOrderSection" class="hidden border border-emerald-200 bg-emerald-50/70 rounded-xl p-3">
           <div class="flex items-center justify-between mb-1">
             <span class="text-[11px] font-bold text-[#1E3A2B] flex items-center gap-1">
@@ -324,8 +378,8 @@
           </button>
         </div>
 
-        <!-- Delivery Timeline & Damage Protection -->
-        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-xs text-emerald-950 space-y-1 mb-2">
+        <!-- Delivery & Guarantee Notice -->
+        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-xs text-emerald-950 space-y-1">
           <p class="font-bold flex items-center gap-1.5 text-[11px]">
             <span>🚚</span> Dispatch within 24–48 hrs | Delivery in 3–5 days
           </p>
@@ -333,6 +387,7 @@
             🛡️ 100% Free Replacement if package is damaged in transit.
           </p>
         </div>
+
         <div>
           <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Order Items</h4>
           <div id="cartItemsList" class="divide-y border rounded-xl p-2 bg-gray-50"></div>
@@ -421,20 +476,15 @@
     }
 
     function init() {
-      // 1. Restore Persistent Cart from LocalStorage
       try {
         const savedCart = localStorage.getItem('shreeju_saved_cart');
-        if (savedCart) {
-          state.cart = JSON.parse(savedCart);
-        }
+        if (savedCart) state.cart = JSON.parse(savedCart);
       } catch(e) {}
 
-      // 2. Auto-fill Saved Customer Profile
       loadCustomerProfile();
       loadPastOrderInfo();
       updateCartDisplay();
 
-      // 3. Parallel Instant Data Fetching
       fetchFastCSV(SHEET_URLS.products, 30).then(rows => {
         state.products = rows.filter(r => (r.InStock || "").toUpperCase() === "YES");
         renderCatalog();
@@ -471,7 +521,6 @@
       });
     }
 
-    // Customer Profile Storage
     function saveCustomerProfile() {
       const profile = {
         name: document.getElementById('custName').value.trim(),
@@ -487,17 +536,19 @@
       try {
         const saved = localStorage.getItem('shreeju_customer_profile');
         if (saved) {
-          const profile = JSON.parse(saved);
-          if (profile.name) document.getElementById('custName').value = profile.name;
-          if (profile.phone) document.getElementById('custPhone').value = profile.phone;
-          if (profile.address) document.getElementById('custAddress').value = profile.address;
-          if (profile.city) document.getElementById('custCity').value = profile.city;
-          if (profile.pincode) document.getElementById('custPincode').value = profile.pincode;
+          const p = JSON.parse(saved);
+          if (p.name) document.getElementById('custName').value = p.name;
+          if (p.phone) {
+            document.getElementById('custPhone').value = p.phone;
+            document.getElementById('trackPhoneInput').value = p.phone;
+          }
+          if (p.address) document.getElementById('custAddress').value = p.address;
+          if (p.city) document.getElementById('custCity').value = p.city;
+          if (p.pincode) document.getElementById('custPincode').value = p.pincode;
         }
       } catch(e) {}
     }
 
-    // Past Orders & Reorder Logic
     function loadPastOrderInfo() {
       try {
         const past = localStorage.getItem('shreeju_last_order');
@@ -520,7 +571,7 @@
         if (order && order.cartState) {
           state.cart = Object.assign({}, state.cart, order.cartState);
           updateCartDisplay();
-          alert("Pichle order ke items basket me add ho gaye hain!");
+          alert("Pichle order ke items basket me wapas add ho gaye!");
         }
       } catch(e) {}
     }
@@ -529,10 +580,6 @@
       const s = state.settings;
       if (s.StoreName) document.getElementById('storeName').textContent = s.StoreName;
       if (s.StoreTagline) document.getElementById('storeTagline').textContent = s.StoreTagline;
-      if (s.ShowFlashBar === 'YES' && s.FlashOfferText) {
-        document.getElementById('flashText').textContent = s.FlashOfferText;
-        document.getElementById('flashBar').classList.remove('hidden');
-      }
 
       const addr = s.StoreAddress || "1306 Agra Road, Hathras, Uttar Pradesh - 204101";
       const phone = s.WhatsAppNumber || "919690002789";
@@ -554,12 +601,10 @@
       if(s.FSSAI_No) {
         document.getElementById('badgeFssaiNo').textContent = "Lic: " + s.FSSAI_No;
         document.getElementById('footerFssai').textContent = s.FSSAI_No;
-        document.getElementById('modalFssai').textContent = s.FSSAI_No;
       }
       if(s.GST_No) {
         document.getElementById('badgeGstNo').textContent = "GSTIN: " + s.GST_No;
         document.getElementById('footerGst').textContent = s.GST_No;
-        document.getElementById('modalGst').textContent = s.GST_No;
       }
     }
 
@@ -768,7 +813,7 @@
         badgeEl.classList.add('hidden');
       }
 
-      document.getElementById('detailDesc').textContent = prod.ShortDescription || "Made with traditional authentic methods to preserve natural aroma, taste, and nutrition. 100% chemical free and unadulterated.";
+      document.getElementById('detailDesc').textContent = prod.ShortDescription || "Prepared with traditional care. 100% natural, unpolished and chemical free.";
       
       const ingBox = document.getElementById('detailIngredientsBox');
       if (prod.Ingredients && prod.Ingredients.trim() !== "") {
@@ -787,6 +832,29 @@
 
       document.getElementById('detailPrice').textContent = `₹${currentDetailVariant.price}`;
       document.getElementById('detailMrp').textContent = `₹${currentDetailVariant.mrp}`;
+
+      // Populate Specific Product Reviews
+      const specificReviews = state.reviews.filter(r => 
+        (r.Product && prod.ProductName.toLowerCase().includes(r.Product.toLowerCase().trim())) ||
+        (r.Product && r.Product.toLowerCase().includes(prod.ProductName.toLowerCase().trim()))
+      );
+
+      const reviewList = document.getElementById('detailProductReviewsList');
+      document.getElementById('detailReviewCount').textContent = `(${specificReviews.length} Verified Reviews)`;
+
+      if (specificReviews.length) {
+        reviewList.innerHTML = specificReviews.map(r => `
+          <div class="bg-gray-50 border border-gray-100 p-2.5 rounded-xl">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-gray-800 text-[11px]">${r.CustomerName}</span>
+              <span class="text-amber-400 text-xs">${'★'.repeat(parseInt(r.Rating) || 5)}</span>
+            </div>
+            <p class="text-gray-600 text-[10px] mt-1 italic leading-relaxed">"${r.ReviewText}"</p>
+          </div>
+        `).join('');
+      } else {
+        reviewList.innerHTML = `<p class="text-gray-400 text-[10px] italic py-1">Be the first to review this pure product after delivery!</p>`;
+      }
 
       document.getElementById('detailShareBtn').onclick = () => shareProduct(prod.ProductName, currentDetailVariant.price);
 
@@ -860,7 +928,6 @@
     }
 
     function updateCartDisplay() {
-      // Save Cart to LocalStorage for persistence
       try {
         localStorage.setItem('shreeju_saved_cart', JSON.stringify(state.cart));
       } catch(e) {}
@@ -949,6 +1016,66 @@
       document.getElementById('contactModal').classList.toggle('hidden');
     }
 
+    function toggleTrackingModal() {
+      document.getElementById('trackingModal').classList.toggle('hidden');
+    }
+
+    // Self-Service Order Tracking
+    async function checkOrderStatus() {
+      let phone = document.getElementById('trackPhoneInput').value.trim();
+      if (!phone) {
+        alert("Kripya apna WhatsApp number daalein!");
+        return;
+      }
+      phone = phone.replace(/^0+/, '').replace(/^\+91/, '').trim();
+      const resContainer = document.getElementById('trackingResult');
+      resContainer.classList.remove('hidden');
+      resContainer.innerHTML = `<p class="text-gray-500 py-2 text-center">Checking tracking details...</p>`;
+
+      try {
+        const res = await fetch(`${SHEET_URLS.orderScript}?action=track&phone=${encodeURIComponent(phone)}`);
+        const data = await res.json();
+
+        if (data && data.status === "FOUND") {
+          const courierUrl = data.courier === 'India Post' ? `https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx` : `https://www.google.com/search?q=${encodeURIComponent(data.courier + ' tracking ' + data.trackingNo)}`;
+          resContainer.innerHTML = `
+            <div class="space-y-1.5 text-xs">
+              <div class="flex justify-between border-b pb-1">
+                <span class="font-bold text-gray-700">Order Status:</span>
+                <span class="font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">${data.orderStatus || 'Dispatched'}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Courier Partner:</span>
+                <span class="font-semibold text-gray-800">${data.courier || 'Speed Post'}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Tracking Number:</span>
+                <span class="font-mono font-bold text-[#1E3A2B]">${data.trackingNo || 'Available soon'}</span>
+              </div>
+              ${data.trackingNo ? `
+                <a href="${courierUrl}" target="_blank" class="mt-2 block bg-[#1E3A2B] hover:bg-[#2D5A27] text-white text-center py-2 rounded-lg font-bold text-xs">
+                  Track Live on Courier Portal →
+                </a>
+              ` : ''}
+            </div>
+          `;
+        } else {
+          resContainer.innerHTML = `
+            <p class="text-amber-800 text-[11px] leading-relaxed">
+              Is number se abhi koi recent dispatched order nahi mila. Agar aapne abhi order kiya hai, toh packaging ke baad 24 hours me tracking yahan update ho jayegi.
+            </p>
+          `;
+        }
+      } catch(err) {
+        resContainer.innerHTML = `
+          <div class="text-[11px] text-gray-700 space-y-1">
+            <p class="font-bold text-emerald-900">Order Status: In Progress</p>
+            <p>Aapka order securely pack ho raha hai. Dispatch hote hi tracking details aapke WhatsApp par share kar di jayegi.</p>
+          </div>
+        `;
+      }
+    }
+
     function shareStore() {
       const storeUrl = window.location.href;
       const shareMsg = `Namaste! Shreeju Foods se 100% pure, natural and chemical-free spices, bilona ghee aur dry fruits mangwane ke liye yahan visit karein: ${storeUrl}`;
@@ -969,23 +1096,61 @@
       }
     }
 
+    // Ratings & Reviews Calculation (Amazon-style breakdown)
     function renderReviews() {
-      const grid = document.getElementById('reviewsGrid');
-      if(!state.reviews.length) {
-        grid.innerHTML = `<p class="text-xs text-gray-400 py-2">Reviews loading...</p>`;
+      const total = state.reviews.length;
+      if (!total) {
+        document.getElementById('reviewsGrid').innerHTML = `<p class="text-xs text-gray-400 py-2">Reviews loading...</p>`;
         return;
       }
-      grid.innerHTML = state.reviews.map(rev => {
+
+      let sum = 0;
+      const starCounts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+
+      state.reviews.forEach(r => {
+        const rating = parseInt(r.Rating) || 5;
+        sum += rating;
+        if (starCounts[rating] !== undefined) starCounts[rating]++;
+      });
+
+      const avg = (sum / total).toFixed(1);
+      document.getElementById('avgRatingNumber').textContent = avg;
+      document.getElementById('totalReviewsCount').textContent = `Based on ${total} verified ratings`;
+
+      const roundedStars = Math.round(parseFloat(avg));
+      document.getElementById('avgRatingStars').textContent = '★'.repeat(roundedStars) + '☆'.repeat(5 - roundedStars);
+
+      const barsContainer = document.getElementById('ratingBarsContainer');
+      barsContainer.innerHTML = [5, 4, 3, 2, 1].map(star => {
+        const count = starCounts[star] || 0;
+        const percent = Math.round((count / total) * 100);
+        return `
+          <div class="flex items-center gap-2">
+            <span class="w-12 text-right font-medium text-gray-600">${star} Star</span>
+            <div class="flex-1 bg-gray-100 rounded-full h-2.5 overflow-hidden">
+              <div class="bg-amber-400 h-2.5 rounded-full" style="width: ${percent}%"></div>
+            </div>
+            <span class="w-8 text-right text-gray-500 font-mono">${percent}%</span>
+          </div>
+        `;
+      }).join('');
+
+      // Render only top 6 recent reviews on front page
+      const grid = document.getElementById('reviewsGrid');
+      grid.innerHTML = state.reviews.slice(0, 6).map(rev => {
         const rating = parseInt(rev.Rating) || 5;
         const starsHtml = '★'.repeat(rating) + '☆'.repeat(5 - rating);
         return `
-          <div class="min-w-[220px] max-w-[240px] bg-white border border-gray-100 rounded-xl p-3 shadow-sm flex-shrink-0 text-xs flex flex-col justify-between">
+          <div class="bg-gray-50 border border-gray-100 rounded-xl p-3 shadow-sm flex flex-col justify-between text-xs">
             <div>
-              <div class="text-amber-400 text-xs mb-1">${starsHtml}</div>
-              <p class="text-gray-700 italic line-clamp-3 text-[11px]">"${rev.ReviewText}"</p>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-amber-400 text-xs">${starsHtml}</span>
+                <span class="text-[10px] text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded font-medium">${rev.Product || 'Verified Buy'}</span>
+              </div>
+              <p class="text-gray-700 italic line-clamp-3 text-[11px] mt-1">"${rev.ReviewText}"</p>
             </div>
-            <div class="border-t pt-2 mt-2">
-              <span class="font-bold text-gray-900 block text-[11px]">${rev.CustomerName}</span>
+            <div class="border-t pt-2 mt-2 flex justify-between items-baseline">
+              <span class="font-bold text-gray-900 text-[11px]">${rev.CustomerName}</span>
               <span class="text-gray-400 text-[10px]">${rev.City || 'India'}</span>
             </div>
           </div>
@@ -1060,7 +1225,6 @@
         return;
       }
 
-      // Save Customer Profile & Order History Locally
       saveCustomerProfile();
       
       const pastOrderItems = [];
@@ -1074,7 +1238,6 @@
         pastOrderItems.push({ name: it.name, size: it.size, price: it.price, qty: it.qty });
       });
 
-      // Save Last Order for Re-order feature
       try {
         const orderHistory = {
           date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
