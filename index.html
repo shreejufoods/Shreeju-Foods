@@ -47,30 +47,19 @@
           <span>Recommend</span>
         </button>
 
-        <style>
-  .goog-te-banner-frame.skiptranslate, .goog-te-banner-frame { display: none !important; }
-  body { top: 0px !important; }
-  #google_translate_element { display: inline-flex !important; align-items: center !important; }
-  .goog-te-gadget { 
-    font-size: 0px !important; 
-    color: transparent !important; 
+<!-- Google Language Selector -->
+<div id="google_translate_element" class="inline-block my-auto"></div>
+
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'en',
+      includedLanguages: 'hi,mr,gu,bn,te,ta,pa,en',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    }, 'google_translate_element');
   }
-  .goog-te-gadget .goog-te-combo {
-    display: inline-block !important;
-    visibility: visible !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    color: #1e293b !important;
-    background: #ffffff !important;
-    border: 1px solid #cbd5e1 !important;
-    border-radius: 8px !important;
-    padding: 4px 8px !important;
-    height: 30px !important;
-    outline: none !important;
-    cursor: pointer !important;
-  }
-</style>
-        
+</script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>        
         <!-- Account / Profile Button -->
 <button id="userAccountBtn" onclick="openAccountModal()" class="flex items-center gap-1.5 bg-emerald-800/80 hover:bg-emerald-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow transition">
   <span id="userAccountLabel">Login / Account 👤</span>
