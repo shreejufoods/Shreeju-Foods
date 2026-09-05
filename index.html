@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <!-- Speed Booster: Preconnect to Fast CDNs -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://translate.google.com">
+  <link rel="dns-prefetch" href="https://translate.googleapis.com">
+
+  <!-- Instant Engine: Loads pages 2x-3x faster on touch/hover -->
+  <script src="//instant.page/5.2.0" type="module" integrity="sha384-jnZyxPjiCGYXKZdQDcn2ekTczZm/002e55G4V50ProPhkqc9nKWb88kHUfl5EQ8g"></script>
   <!-- Speed Booster: Preconnect to Fast CDNs -->
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="preconnect" href="https://translate.google.com">
@@ -1639,5 +1649,29 @@ document.addEventListener("DOMContentLoaded", () => {
   </svg>
   <span class="text-xs font-bold pr-1">Need Help? Chat</span>
 </a>
+  <!-- Automatic Lazy Loading & Performance Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1. Observer to add lazy-loading to all catalog images automatically
+    const imgObserver = new MutationObserver(() => {
+      const allImgs = document.querySelectorAll('#productsGrid img');
+      allImgs.forEach((img, index) => {
+        if (!img.getAttribute('loading')) {
+          if (index > 3) {
+            img.setAttribute('loading', 'lazy');
+            img.setAttribute('decoding', 'async');
+          } else {
+            img.setAttribute('fetchpriority', 'high');
+          }
+        }
+      });
+    });
+
+    const catalog = document.getElementById('productsGrid');
+    if (catalog) {
+      imgObserver.observe(catalog, { childList: true, subtree: true });
+    }
+  });
+</script>
 </body>
 </html>
