@@ -1504,6 +1504,17 @@ document.addEventListener("DOMContentLoaded", () => {
     try { updateAccountUI(JSON.parse(saved)); } catch(e){}
   }
 });
+  function toggleGiftFields() {
+  const isGift = document.getElementById('isGiftCheckbox') ? document.getElementById('isGiftCheckbox').checked : false;
+  const container = document.getElementById('giftFieldsContainer');
+  if (container) {
+    if (isGift) {
+      container.classList.remove('hidden');
+    } else {
+      container.classList.add('hidden');
+    }
+  }
+}
   </script>
 
   <!-- User Account / Login Modal -->
