@@ -1313,5 +1313,70 @@
 
     window.onload = init;
   </script>
+
+  <!-- User Account / Login Modal -->
+<div id="accountModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl relative">
+    <button onclick="closeAccountModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-xl font-bold">&times;</button>
+    
+    <!-- State 1: Login / Register Form -->
+    <div id="authFormView">
+      <h3 class="text-lg font-bold text-gray-900 mb-1">Customer Account</h3>
+      <p class="text-xs text-gray-500 mb-4">Login to save your delivery details for 1-click ordering.</p>
+      
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-gray-700 font-semibold mb-1">WhatsApp / Mobile Number</label>
+          <input type="tel" id="authPhone" placeholder="10-digit number" class="w-full border rounded-lg p-2.5 outline-none focus:border-emerald-600 font-mono">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-semibold mb-1">4-Digit Security PIN</label>
+          <input type="password" id="authPin" maxlength="4" placeholder="e.g. 1234" class="w-full border rounded-lg p-2.5 outline-none focus:border-emerald-600 font-mono tracking-widest text-center text-sm">
+        </div>
+        
+        <div id="newUserNameField" class="hidden">
+          <label class="block text-gray-700 font-semibold mb-1">Your Full Name</label>
+          <input type="text" id="authName" placeholder="Aapka Naam" class="w-full border rounded-lg p-2.5 outline-none focus:border-emerald-600">
+        </div>
+
+        <button onclick="handleUserAuth()" id="authSubmitBtn" class="w-full bg-[#1E3A2B] hover:bg-[#2D5A27] text-white py-2.5 rounded-lg font-bold shadow transition mt-2">
+          Login to My Account
+        </button>
+        <p id="authMsg" class="text-center text-[11px] text-amber-700 hidden"></p>
+        
+        <div class="text-center pt-2 border-t">
+          <button onclick="toggleNewUserMode()" id="authToggleBtn" class="text-emerald-800 font-bold hover:underline text-[11px]">
+            New customer? Create account with 4-digit PIN
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- State 2: Logged In Dashboard View -->
+    <div id="authProfileView" class="hidden space-y-4 text-xs">
+      <div class="flex items-center justify-between border-b pb-3">
+        <div>
+          <p class="text-gray-500 text-[11px]">Logged in as</p>
+          <h4 id="profileNameDisplay" class="text-base font-bold text-gray-900"></h4>
+          <p id="profilePhoneDisplay" class="font-mono text-gray-600 text-[11px]"></p>
+        </div>
+        <button onclick="logoutUser()" class="text-red-600 hover:text-red-800 font-semibold text-xs border border-red-200 px-2.5 py-1 rounded-md">
+          Logout
+        </button>
+      </div>
+
+      <div>
+        <p class="font-bold text-gray-800 mb-1">Default Saved Address:</p>
+        <div id="profileAddressBox" class="p-3 bg-gray-50 rounded-lg text-gray-700 leading-relaxed border border-gray-100">
+          No saved address yet. It will auto-save on your next order!
+        </div>
+      </div>
+
+      <button onclick="closeAccountModal()" class="w-full bg-emerald-800 text-white py-2 rounded-lg font-bold">
+        Continue Shopping
+      </button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
