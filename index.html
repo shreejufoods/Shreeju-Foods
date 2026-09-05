@@ -1391,9 +1391,12 @@ const pincode = document.getElementById('authPincode') ? document.getElementById
       payload.append("phone", phone);
       payload.append("pin", pin);
       payload.append("name", name || "Customer");
+      payload.append("address", address);
+payload.append("city", city);
+payload.append("pincode", pincode);
 
       await fetch(SHEET_URLS.orderScript, { method: "POST", mode: "no-cors", body: payload });
-      const userObj = { phone, name: name || "Customer", pin };
+      const userObj = { phone, name: name || "Customer", pin, address, city, pincode };
       localStorage.setItem('shreeju_user', JSON.stringify(userObj));
       updateAccountUI(userObj);
       closeAccountModal();
