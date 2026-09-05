@@ -433,6 +433,28 @@
               <!-- Save Account Toggle -->
 <div class="mt-3 p-2.5 bg-emerald-50 rounded-lg border border-emerald-100 text-xs">
   <label class="flex items-center gap-2 cursor-pointer font-semibold text-emerald-950">
+    <!-- Gift Checkbox Toggle -->
+<div class="p-3 my-2 bg-pink-50/80 border border-pink-200 rounded-xl text-xs">
+  <label class="flex items-center gap-2 cursor-pointer font-bold text-pink-950">
+    <input type="checkbox" id="isGiftCheckbox" onchange="toggleGiftFields()" class="accent-pink-600 w-4 h-4">
+    <span>🎁 Send as a Surprise Gift?</span>
+  </label>
+  <p class="text-[10px] text-pink-800 mt-0.5 pl-6">
+    Tick karein agar parcel kisi aur ke liye hai. Unhe koi WhatsApp alert nahi jayega!
+  </p>
+
+  <!-- Hidden Fields -->
+  <div id="giftFieldsContainer" class="hidden mt-3 space-y-2 pt-2 border-t border-pink-200/60">
+    <div>
+      <label class="block font-semibold text-gray-700 text-[11px] mb-1">Receiver's Full Name (Jise gift milna hai)</label>
+      <input type="text" id="giftReceiverName" placeholder="Recipient ka Naam" class="w-full p-2 rounded-lg border border-gray-300 text-xs outline-none focus:border-pink-500">
+    </div>
+    <div>
+      <label class="block font-semibold text-gray-700 text-[11px] mb-1">Personal Gift Note / Wishes (Optional)</label>
+      <textarea id="giftMessage" rows="2" placeholder="Slip ke andar ka message (e.g. Wishing you good health!)" class="w-full p-2 rounded-lg border border-gray-300 text-xs outline-none focus:border-pink-500"></textarea>
+    </div>
+  </div>
+</div>
     <input type="checkbox" id="saveAccountCheckbox" checked class="accent-emerald-700 w-4 h-4">
     <span>Save my details for permanent fast checkout</span>
   </label>
