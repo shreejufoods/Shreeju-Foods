@@ -21,23 +21,25 @@
 
   <!-- Header -->
   <header class="bg-white border-b sticky top-0 z-40 shadow-sm">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-2 md:gap-3">
-      <div class="flex items-center gap-3 cursor-pointer" onclick="selectCategory('ALL')">
-        <img id="storeLogo" src="https://shreejufoods.github.io/Shreeju-Foods/logo.png" alt="Shreeju Foods" class="h-11 w-auto object-contain rounded-lg" onerror="this.src='https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=100'" />
+    <div class="max-w-6xl mx-auto px-3 sm:px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <!-- Store Brand & Logo -->
+      <div class="flex items-center gap-2 sm:gap-3 cursor-pointer" onclick="selectCategory('ALL')">
+        <img id="storeLogo" src="https://shreejufoods.github.io/Shreeju-Foods/logo.png" alt="Shreeju Foods" class="h-9 sm:h-11 w-auto object-contain rounded-lg" onerror="this.src='https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=100'" />
         <div>
-          <h1 id="storeName" class="text-lg md:text-xl font-bold text-gray-900 leading-tight">Shreeju Foods</h1>
-          <p id="storeTagline" class="text-[11px] text-gray-500 hidden sm:block">100% Natural & Chemical Free</p>
+          <h1 id="storeName" class="text-base sm:text-lg md:text-xl font-bold text-gray-900 leading-tight">Shreeju Foods</h1>
+          <p id="storeTagline" class="text-[10px] sm:text-[11px] text-gray-500 hidden sm:block">100% Natural & Chemical Free</p>
         </div>
       </div>
       
-      <div class="flex items-center gap-2">
+      <!-- Action Buttons Area -->
+      <div class="flex items-center flex-wrap gap-1.5 sm:gap-2 ml-auto">
         <!-- Self-Service Order Tracking Button -->
-        <button onclick="toggleTrackingModal()" class="border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-[#1E3A2B] px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-bold transition shadow-sm">
+        <button onclick="toggleTrackingModal()" class="border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-[#1E3A2B] px-2.5 sm:px-3 py-1.5 rounded-xl flex items-center gap-1 text-xs font-bold transition shadow-sm whitespace-nowrap">
           <i class="fa-solid fa-truck-fast text-emerald-700"></i>
           <span>Track</span>
         </button>
 
-        <button onclick="toggleContactModal()" class="border border-gray-300 hover:border-gray-400 text-gray-700 px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-semibold transition shadow-sm bg-white">
+        <button onclick="toggleContactModal()" class="border border-gray-300 hover:border-gray-400 text-gray-700 px-2.5 sm:px-3 py-1.5 rounded-xl flex items-center gap-1 text-xs font-semibold transition shadow-sm bg-white whitespace-nowrap">
           <i class="fa-solid fa-headset text-green-700"></i>
           <span class="hidden sm:inline">Contact</span>
         </button>
@@ -47,25 +49,16 @@
           <span>Recommend</span>
         </button>
 
-<!-- Google Language Selector -->
-<div id="google_translate_element" class="inline-block my-auto"></div>
+        <!-- Google Language Selector -->
+        <div id="google_translate_element" class="inline-flex items-center"></div>
 
-<script type="text/javascript">
-  function googleTranslateElementInit() {
-    new google.translate.TranslateElement({
-      pageLanguage: 'en',
-      includedLanguages: 'hi,mr,gu,bn,te,ta,pa,en',
-      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-    }, 'google_translate_element');
-  }
-</script>
-<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>        
         <!-- Account / Profile Button -->
-<button id="userAccountBtn" onclick="openAccountModal()" class="flex items-center gap-1.5 bg-emerald-800/80 hover:bg-emerald-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow transition">
-  <span id="userAccountLabel">Login / Account 👤</span>
-</button>
+        <button id="userAccountBtn" onclick="openAccountModal()" class="flex items-center gap-1 bg-emerald-800/80 hover:bg-emerald-800 text-white px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold shadow transition whitespace-nowrap">
+          <span id="userAccountLabel">Account 👤</span>
+        </button>
         
-        <button onclick="toggleCart()" class="relative bg-[#2D5A27] text-white px-3.5 py-1.5 rounded-xl flex items-center gap-2 text-xs font-medium hover:bg-[#1E3A2B] transition shadow-sm">
+        <!-- Cart Button -->
+        <button onclick="toggleCart()" class="relative bg-[#2D5A27] text-white px-3 sm:px-3.5 py-1.5 rounded-xl flex items-center gap-1.5 sm:gap-2 text-xs font-medium hover:bg-[#1E3A2B] transition shadow-sm whitespace-nowrap">
           <i class="fa-solid fa-bag-shopping"></i>
           <span>Basket</span>
           <span id="cartCount" class="bg-amber-400 text-gray-900 text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">0</span>
@@ -74,14 +67,13 @@
     </div>
 
     <!-- Search Bar -->
-    <div class="max-w-6xl mx-auto px-4 pb-3">
+    <div class="max-w-6xl mx-auto px-3 sm:px-4 pb-2.5">
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gray-400"></i>
         <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Search spices, ghee, dry fruits, ubtan..." class="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-[#2D5A27] bg-gray-50 text-sm" />
       </div>
     </div>
   </header>
-
   <!-- Category Filter Bar -->
   <div class="max-w-6xl mx-auto px-4 mt-4">
     <div id="categoriesContainer" class="flex gap-2 overflow-x-auto hide-scrollbar py-1">
