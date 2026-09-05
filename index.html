@@ -1284,6 +1284,14 @@
       const address = document.getElementById('custAddress').value.trim();
       const city = document.getElementById('custCity').value.trim();
       const pincode = document.getElementById('custPincode').value.trim();
+      const isGift = document.getElementById('isGiftCheckbox') && document.getElementById('isGiftCheckbox').checked;
+      const giftReceiver = document.getElementById('giftReceiverName') ? document.getElementById('giftReceiverName').value.trim() : '';
+      const giftMsg = document.getElementById('giftMessage') ? document.getElementById('giftMessage').value.trim() : '';
+
+      let giftHeader = "";
+      if (isGift) {
+        giftHeader = `🎁 *SURPRISE GIFT ORDER*\n👤 Receiver Name: ${giftReceiver || 'Gift Recipient'}\n📝 Gift Note: "${giftMsg || 'Best Wishes!'}"\n--------------------------\n`;
+      }
 
       if (!name || !phone || !address || !city || !pincode) {
         alert("Kripya saari delivery details bharein!");
@@ -1343,6 +1351,7 @@
       });
 
       const fullMessage = 
+        giftHeader +
         `*NEW ORDER - SHREEJU FOODS*\n\n` +
         `*CUSTOMER DETAILS:*\n` +
         `Name: ${name}\n` +
@@ -1402,6 +1411,17 @@ function toggleNewUserMode() {
     nameField.classList.add('hidden');
     submitBtn.innerText = "Login to My Account";
     toggleBtn.innerText = "New customer? Create account with 4-digit PIN";
+  }
+}
+    function toggleGiftFields() {
+  const isGift = document.getElementById('isGiftCheckbox') ? document.getElementById('isGiftCheckbox').checked : false;
+  const container = document.getElementById('giftFieldsContainer');
+  if (container) {
+    if (isGift) {
+      container.classList.remove('hidden');
+    } else {
+      container.classList.add('hidden');
+    }
   }
 }
 
