@@ -1367,6 +1367,9 @@ async function handleUserAuth() {
   const phone = document.getElementById('authPhone').value.replace(/[^0-9]/g, '');
   const pin = document.getElementById('authPin').value.trim();
   const name = document.getElementById('authName').value.trim();
+const address = document.getElementById('authAddress') ? document.getElementById('authAddress').value.trim() : '';
+const city = document.getElementById('authCity') ? document.getElementById('authCity').value.trim() : '';
+const pincode = document.getElementById('authPincode') ? document.getElementById('authPincode').value.trim() : '';
   const msg = document.getElementById('authMsg');
   
   if (phone.length < 10) {
