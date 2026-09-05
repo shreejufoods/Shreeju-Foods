@@ -410,6 +410,16 @@
             <div class="grid grid-cols-2 gap-2">
               <input type="text" id="custCity" onchange="saveCustomerProfile()" placeholder="City *" class="p-2.5 rounded-lg border border-gray-300 text-xs outline-none focus:border-green-600" />
               <input type="text" id="custPincode" onchange="saveCustomerProfile()" placeholder="Pincode *" class="p-2.5 rounded-lg border border-gray-300 text-xs outline-none focus:border-green-600" />
+              <!-- Save Account Toggle -->
+<div class="mt-3 p-2.5 bg-emerald-50 rounded-lg border border-emerald-100 text-xs">
+  <label class="flex items-center gap-2 cursor-pointer font-semibold text-emerald-950">
+    <input type="checkbox" id="saveAccountCheckbox" checked class="accent-emerald-700 w-4 h-4">
+    <span>Save my details for permanent fast checkout</span>
+  </label>
+  <p class="text-[10px] text-emerald-800 mt-1 pl-6">
+    Untick karein agar aap details save nahi karna chahte (Guest Checkout).
+  </p>
+</div>
             </div>
           </div>
         </div>
