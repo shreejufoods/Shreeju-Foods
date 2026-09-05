@@ -1020,7 +1020,7 @@
       document.getElementById('trackingModal').classList.toggle('hidden');
     }
 
-    // Self-Service Order Tracking
+// Multi-Courier Smart Tracking Function
     async function checkOrderStatus() {
       let phone = document.getElementById('trackPhoneInput').value.trim();
       if (!phone) {
@@ -1037,7 +1037,22 @@
         const data = await res.json();
 
         if (data && data.status === "FOUND") {
-          const courierUrl = data.courier === 'India Post' ? `https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx` : `https://www.google.com/search?q=${encodeURIComponent(data.courier + ' tracking ' + data.trackingNo)}`;
+          const courierName = (data.courier || 'India Post').trim();
+          const trk = encodeURIComponent(data.trackingNo || '');
+          let courierUrl = `https://www.google.com/search?q=${encodeURIComponent(courierName + ' tracking ' + data.trackingNo)}`;
+
+          // Official direct portal links
+          const cLower = courierName.toLowerCase();
+          if (cLower.includes('india post') || cLower.includes('speed post')) {
+            courierUrl = `https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx`;
+          } else if (cLower.includes('dtdc')) {
+            courierUrl = `https://www.dtdc.in/tracking/tracking_results.asp?Ttype=awb_no&strAvbNo=${trk}`;
+          } else if (cLower.includes('trackon')) {
+            courierUrl = `https://trackon.in/`;
+          } else if (cLower.includes('tirupati')) {
+            courierUrl = `https://www.shreetirupaticourier.net/`;
+          }
+
           resContainer.innerHTML = `
             <div class="space-y-1.5 text-xs">
               <div class="flex justify-between border-b pb-1">
@@ -1046,15 +1061,15 @@
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-600">Courier Partner:</span>
-                <span class="font-semibold text-gray-800">${data.courier || 'Speed Post'}</span>
+                <span class="font-bold text-gray-800">${courierName}</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-gray-600">Tracking Number:</span>
-                <span class="font-mono font-bold text-[#1E3A2B]">${data.trackingNo || 'Available soon'}</span>
+                <span class="text-gray-600">Tracking / Docket No:</span>
+                <span class="font-mono font-bold text-[#1E3A2B]">${data.trackingNo || 'Packing in progress'}</span>
               </div>
               ${data.trackingNo ? `
-                <a href="${courierUrl}" target="_blank" class="mt-2 block bg-[#1E3A2B] hover:bg-[#2D5A27] text-white text-center py-2 rounded-lg font-bold text-xs">
-                  Track Live on Courier Portal →
+                <a href="${courierUrl}" target="_blank" class="mt-2 block bg-[#1E3A2B] hover:bg-[#2D5A27] text-white text-center py-2 rounded-lg font-bold text-xs shadow transition">
+                  Track Live on ${courierName} Official Portal →
                 </a>
               ` : ''}
             </div>
@@ -1062,7 +1077,7 @@
         } else {
           resContainer.innerHTML = `
             <p class="text-amber-800 text-[11px] leading-relaxed">
-              Is number se abhi koi recent dispatched order nahi mila. Agar aapne abhi order kiya hai, toh packaging ke baad 24 hours me tracking yahan update ho jayegi.
+              Is number se abhi koi dispatched order nahi mila. Agar aapne haal hi me order kiya hai, toh packaging ke baad 24 hours me tracking details yahan update ho jayegi.
             </p>
           `;
         }
@@ -1070,7 +1085,7 @@
         resContainer.innerHTML = `
           <div class="text-[11px] text-gray-700 space-y-1">
             <p class="font-bold text-emerald-900">Order Status: In Progress</p>
-            <p>Aapka order securely pack ho raha hai. Dispatch hote hi tracking details aapke WhatsApp par share kar di jayegi.</p>
+            <p>Aapka order securely pack ho raha hai. Dispatch hote hi tracking number yahan show hone lagega.</p>
           </div>
         `;
       }
