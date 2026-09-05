@@ -46,28 +46,40 @@
           <i class="fa-solid fa-share-nodes text-green-700"></i>
           <span>Recommend</span>
         </button>
-   <style>
-  /* Force Hide Google Branding & Fix Alignment */
+
+        <!-- Google Language Selector -->
+<div id="google_translate_element" class="inline-flex items-center"></div>
+
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'en',
+      includedLanguages: 'hi,mr,gu,bn,te,ta,pa,en',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+      autoDisplay: false
+    }, 'google_translate_element');
+  }
+</script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<style>
   .goog-te-banner-frame.skiptranslate, .goog-te-banner-frame { display: none !important; }
   body { top: 0px !important; }
-  #google_translate_element { display: flex !important; align-items: center !important; }
-  #google_translate_element .goog-te-gadget { font-size: 0px !important; color: transparent !important; }
-  #google_translate_element .goog-te-gadget > span, 
-  #google_translate_element .goog-te-gadget > div { display: none !important; }
-  #google_translate_element select.goog-te-combo {
-    font-size: 11px !important;
-    color: #1f2937 !important;
-    font-weight: 600 !important;
-    background: #ffffff !important;
-    border: 1px solid #d1d5db !important;
+  .goog-te-gadget { font-size: 11px !important; color: #475569 !important; }
+  .goog-te-gadget span { display: none !important; }
+  .goog-te-combo {
+    margin: 0 !important;
+    padding: 4px 8px !important;
+    border: 1px solid #cbd5e1 !important;
     border-radius: 8px !important;
-    padding: 5px 8px !important;
-    height: 32px !important;
+    background: #ffffff !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: #1e293b !important;
     outline: none !important;
     cursor: pointer !important;
   }
-</style>     
-<div id="google_translate_element" class="flex items-center"></div>        
+</style>
         
         <!-- Account / Profile Button -->
 <button id="userAccountBtn" onclick="openAccountModal()" class="flex items-center gap-1.5 bg-emerald-800/80 hover:bg-emerald-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow transition">
