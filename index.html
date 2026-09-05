@@ -1322,6 +1322,140 @@
     }
 
     window.onload = init;
+
+    // User Account Management
+let isNewUserRegisterMode = false;
+
+function openAccountModal() {
+  const saved = localStorage.getItem('shreeju_user');
+  if (saved) {
+    const user = JSON.parse(saved);
+    document.getElementById('profileNameDisplay').innerText = user.name || "Customer";
+    document.getElementById('profilePhoneDisplay').innerText = "+91 " + user.phone;
+    document.getElementById('profileAddressBox').innerText = user.address ? `${user.address}, ${user.city} - ${user.pincode}` : "Details will auto-update with your next order.";
+    document.getElementById('authFormView').classList.add('hidden');
+    document.getElementById('authProfileView').classList.remove('hidden');
+  } else {
+    document.getElementById('authFormView').classList.remove('hidden');
+    document.getElementById('authProfileView').classList.add('hidden');
+  }
+  document.getElementById('accountModal').classList.remove('hidden');
+}
+
+function closeAccountModal() {
+  document.getElementById('accountModal').classList.add('hidden');
+}
+
+function toggleNewUserMode() {
+  isNewUserRegisterMode = !isNewUserRegisterMode;
+  const nameField = document.getElementById('newUserNameField');
+  const submitBtn = document.getElementById('authSubmitBtn');
+  const toggleBtn = document.getElementById('authToggleBtn');
+  
+  if (isNewUserRegisterMode) {
+    nameField.classList.remove('hidden');
+    submitBtn.innerText = "Create Account & Save";
+    toggleBtn.innerText = "Already have an account? Login here";
+  } else {
+    nameField.classList.add('hidden');
+    submitBtn.innerText = "Login to My Account";
+    toggleBtn.innerText = "New customer? Create account with 4-digit PIN";
+  }
+}
+
+async function handleUserAuth() {
+  const phone = document.getElementById('authPhone').value.replace(/[^0-9]/g, '');
+  const pin = document.getElementById('authPin').value.trim();
+  const name = document.getElementById('authName').value.trim();
+  const msg = document.getElementById('authMsg');
+  
+  if (phone.length < 10) {
+    alert("Kripya sahi 10-digit mobile number daalein!");
+    return;
+  }
+  if (pin.length !== 4) {
+    alert("Kripya 4-digit security PIN daalein!");
+    return;
+  }
+
+  msg.classList.remove('hidden');
+  msg.innerText = "Verifying details...";
+
+  if (isNewUserRegisterMode) {
+    try {
+      const payload = new URLSearchParams();
+      payload.append("action", "register_user");
+      payload.append("phone", phone);
+      payload.append("pin", pin);
+      payload.append("name", name || "Customer");
+
+      await fetch(SHEET_URLS.orderScript, { method: "POST", mode: "no-cors", body: payload });
+      const userObj = { phone, name: name || "Customer", pin };
+      localStorage.setItem('shreeju_user', JSON.stringify(userObj));
+      updateAccountUI(userObj);
+      closeAccountModal();
+      alert("Account create ho gaya! Aap login ho chuke hain.");
+    } catch(e) {
+      msg.innerText = "Network error. Kripya dobara try karein.";
+    }
+  } else {
+    try {
+      const res = await fetch(`${SHEET_URLS.orderScript}?action=login_user&phone=${phone}&pin=${pin}`);
+      const data = await res.json();
+      
+      if (data.status === "SUCCESS") {
+        const userObj = { phone: data.phone, name: data.name, address: data.address, city: data.city, pincode: data.pincode };
+        localStorage.setItem('shreeju_user', JSON.stringify(userObj));
+        updateAccountUI(userObj);
+        closeAccountModal();
+      } else if (data.status === "WRONG_PIN") {
+        msg.innerText = "Galat PIN! Kripya sahi 4-digit PIN daalein.";
+      } else {
+        msg.innerText = "Account nahi mila. Niche 'Create Account' par click karein.";
+      }
+    } catch(e) {
+      msg.innerText = "Server check nahi ho paya. Dobara try karein.";
+    }
+  }
+}
+
+function updateAccountUI(user) {
+  const label = document.getElementById('userAccountLabel');
+  if (user && user.phone) {
+    label.innerText = (user.name && user.name !== "Customer" ? user.name.split(' ')[0] : "Account") + " 👤";
+    if (document.getElementById('custPhone') && !document.getElementById('custPhone').value) {
+      document.getElementById('custPhone').value = user.phone;
+    }
+    if (document.getElementById('custName') && !document.getElementById('custName').value) {
+      document.getElementById('custName').value = user.name || "";
+    }
+    if (document.getElementById('custAddress') && user.address && !document.getElementById('custAddress').value) {
+      document.getElementById('custAddress').value = user.address;
+    }
+    if (document.getElementById('custCity') && user.city && !document.getElementById('custCity').value) {
+      document.getElementById('custCity').value = user.city;
+    }
+    if (document.getElementById('custPincode') && user.pincode && !document.getElementById('custPincode').value) {
+      document.getElementById('custPincode').value = user.pincode;
+    }
+  } else {
+    label.innerText = "Login / Account 👤";
+  }
+}
+
+function logoutUser() {
+  localStorage.removeItem('shreeju_user');
+  updateAccountUI(null);
+  closeAccountModal();
+  alert("Aap safely logout ho gaye hain.");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const saved = localStorage.getItem('shreeju_user');
+  if (saved) {
+    try { updateAccountUI(JSON.parse(saved)); } catch(e){}
+  }
+});
   </script>
 
   <!-- User Account / Login Modal -->
